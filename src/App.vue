@@ -1,17 +1,24 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <img alt="Vue logo" src="./assets/logo.png" />
+  <div class="row">
+    <ExerciseType name="Pull Ups" />
+    <ExerciseType name="Push Ups" />
+    <ExerciseType name="Squats" />
+  </div>
+  <div class="row"><History /></div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import ExerciseType from "./components/ExerciseType.vue";
+import History from "./components/History.vue";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    HelloWorld
-  }
-}
+    ExerciseType,
+    History,
+  },
+};
 </script>
 
 <style>
