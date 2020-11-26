@@ -1,5 +1,5 @@
 <template>
-  <div class="hello">
+  <div class="diff-col">
     <p>View History</p>
   </div>
 </template>
@@ -13,6 +13,9 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.diff-col {
+  background-color: #2523ac;
+}
 h3 {
   margin: 40px 0 0;
 }
