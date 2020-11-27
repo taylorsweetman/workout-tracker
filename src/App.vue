@@ -1,8 +1,8 @@
 <template>
   <div><h1>Taylor's Workout App</h1></div>
   <div class="row" v-if="selectedSession === ''">
-    <exercise-session class="box" name="Push" @selected-state="setSelected" />
     <exercise-session class="box" name="Pull" @selected-state="setSelected" />
+    <exercise-session class="box" name="Push" @selected-state="setSelected" />
     <exercise-session class="box" name="Legs" @selected-state="setSelected" />
   </div>
   <div class="row" v-else>

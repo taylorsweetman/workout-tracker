@@ -1,6 +1,7 @@
 <template>
-  <button>
-    <h1>{{ exerciseName }} - {{ setNum }} - {{ reps }}</h1>
+  <button @click="toggleDone" :class="finished ? 'finished' : ''">
+    <h1>{{ exerciseName }}</h1>
+    <h1>Reps: {{ reps }} </h1>
   </button>
 </template>
 
@@ -13,11 +14,24 @@ export default {
     setNum: Number,
     reps: Number,
   },
+  data() {
+    return {
+      finished: false
+    }
+  },
+  methods: {
+    toggleDone() {
+      this.finished = !this.finished;
+    }
+  }
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.finished {
+  background-color: #42b983;
+}
 h1 {
   color: white;
 }
