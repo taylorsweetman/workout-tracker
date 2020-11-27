@@ -6,15 +6,17 @@
 
 <script>
 export default {
-  name: "HelloWorld",
-  props: {},
+  name: "History",
+  props: {
+    hist: Object
+  },
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .diff-col {
-  background-color: #2523ac;
+  background-color: #30475e;
 }
 h3 {
   margin: 40px 0 0;

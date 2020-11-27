@@ -1,6 +1,6 @@
 <template>
   <button>
-    <h1>{{ setNum }} - {{ reps }}</h1>
+    <h1>{{ exerciseName }} - {{ setNum }} - {{ reps }}</h1>
   </button>
 </template>
 
@@ -9,6 +9,7 @@ console.log("test");
 export default {
   name: "Set",
   props: {
+    exerciseName: String,
     setNum: Number,
     reps: Number,
   },
@@ -17,6 +18,9 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+h1 {
+  color: white;
+}
 h3 {
   margin: 40px 0 0;
 }

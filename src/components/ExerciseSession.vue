@@ -1,21 +1,32 @@
 <template>
-  <button>
+  <button @click="select">
     <h1>{{ name }}</h1>
   </button>
 </template>
 
 <script>
 export default {
-  name: "ExerciseType",
+  name: "ExerciseSession",
   props: {
-    name: String,
+    name: {
+      type: String,
+      required: true,
+    },
+  },
+  emits: ["selected-state"],
+  methods: {
+    select() {
+      this.$emit("selected-state", this.name);
+    },
   },
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+h1 {
+  color: white;
+}
 h3 {
   margin: 40px 0 0;
 }
