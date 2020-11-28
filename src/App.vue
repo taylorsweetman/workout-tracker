@@ -1,16 +1,24 @@
 <template>
   <div><h1>Taylor's Workout App</h1></div>
   <div class="row">
-    <exercise-session
-      v-for="(session, idx) in sessions"
-      :key="idx"
-      :active="session.active"
-      :name="session.name"
-      @selected-state="activateChild(idx)"
-    />
+    <div v-if="selectedIdx !== -1">
+      <exercise-session
+        :active="true"
+        :name="sessions[selectedIdx].name"
+      ></exercise-session>
+    </div>
+    <div v-else>
+      <exercise-session
+        v-for="(session, idx) in sessions"
+        :key="idx"
+        :active="session.active"
+        :name="session.name"
+        @selected-state="activateChild(idx)"
+      />
+    </div>
   </div>
-  <div class="row" v-if="!noneActive">
-    <exercise-session class="box" name="<-" @click="selectedSession = ''" />
+  <div class="row" v-if="selectedIdx !== -1">
+    <button class="box" @click="reset">Back</button>
   </div>
   <div class="row"><History class="box" /></div>
 </template>
@@ -32,18 +40,21 @@ export default {
         1: { name: "Push", active: false },
         2: { name: "Legs", active: false },
       },
-      noneActive: true,
+      selectedIdx: -1,
     };
   },
   methods: {
-    setSelected(sessionName) {
-      this.selectedSession = sessionName;
-    },
     activateChild(idx) {
-      this.noneActive = false;
+      this.selectedIdx = idx;
       var val = this.sessions[idx];
       val.active = true;
       this.sessions[idx] = val;
+    },
+    reset() {
+      for (var idx in this.sessions) {
+        this.sessions[idx].active = false;
+      }
+      this.selectedIdx = -1;
     },
   },
 };

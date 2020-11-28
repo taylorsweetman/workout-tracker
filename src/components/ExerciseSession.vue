@@ -1,22 +1,23 @@
 <template>
-  <button class="box" @click="select">
+  <button v-if="!active" class="box" @click="select">
     <h1>{{ name }}</h1>
   </button>
+  <div v-else class="box"><h1>{{ name }}</h1></div>
   <section v-if="this.active">
     <div class="row" v-if="this.name === 'Pull'">
-      <Set class="box" exercise-name="Pull Ups" :setNum="1" :reps="4" />
-      <Set class="box" exercise-name="Pull Ups" :setNum="2" :reps="4" />
-      <Set class="box" exercise-name="Pull Ups" :setNum="3" :reps="3" />
+      <Set exercise-name="Pull Ups" :setNum="1" :reps="4" />
+      <Set exercise-name="Pull Ups" :setNum="2" :reps="4" />
+      <Set exercise-name="Pull Ups" :setNum="3" :reps="3" />
     </div>
     <div class="row" v-else-if="this.name === 'Push'">
-      <Set class="box" exercise-name="Push Ups" :setNum="1" :reps="10" />
-      <Set class="box" exercise-name="Push Ups" :setNum="2" :reps="10" />
-      <Set class="box" exercise-name="Push Ups" :setNum="3" :reps="10" />
+      <Set exercise-name="Push Ups" :setNum="1" :reps="10" />
+      <Set exercise-name="Push Ups" :setNum="2" :reps="10" />
+      <Set exercise-name="Push Ups" :setNum="3" :reps="10" />
     </div>
     <div class="row" v-else-if="this.name === 'Legs'">
-      <Set class="box" exercise-name="Squats" :setNum="1" :reps="10" />
-      <Set class="box" exercise-name="Squats" :setNum="2" :reps="10" />
-      <Set class="box" exercise-name="Squats" :setNum="3" :reps="10" />
+      <Set exercise-name="Squats" :setNum="1" :reps="10" />
+      <Set exercise-name="Squats" :setNum="2" :reps="10" />
+      <Set exercise-name="Squats" :setNum="3" :reps="10" />
     </div>
   </section>
 </template>
@@ -36,14 +37,11 @@ export default {
     active: {
       type: Boolean,
     },
-    hide: {
-      type: Boolean,
-    }
   },
-  emits: ["selected-state"],
+  emits: ["selectedState"],
   methods: {
     select() {
-      this.$emit("selected-state", true);
+      this.$emit("selected-state");
     },
   },
 };
