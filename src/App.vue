@@ -1,5 +1,8 @@
 <template>
   <div><h1>Taylor's Workout App</h1></div>
+  <div class="row" v-if="selectedIdx !== -1">
+    <button class="box" @click="reset">Back</button>
+  </div>
   <div class="row">
     <div v-if="selectedIdx !== -1">
       <exercise-session
@@ -17,15 +20,14 @@
       />
     </div>
   </div>
-  <div class="row" v-if="selectedIdx !== -1">
-    <button class="box" @click="reset">Back</button>
-  </div>
+
   <div class="row"><History class="box" /></div>
 </template>
 
 <script>
 import ExerciseSession from "./components/ExerciseSession.vue";
 import History from "./components/History.vue";
+import savedData from "./data.js";
 
 export default {
   name: "App",
@@ -36,25 +38,50 @@ export default {
   data() {
     return {
       sessions: {
-        0: { name: "Pull", active: false },
-        1: { name: "Push", active: false },
+        0: { name: "Push", active: false },
+        1: { name: "Pull", active: false },
         2: { name: "Legs", active: false },
       },
+      dataObj: savedData,
       selectedIdx: -1,
     };
   },
   methods: {
     activateChild(idx) {
       this.selectedIdx = idx;
-      var val = this.sessions[idx];
-      val.active = true;
-      this.sessions[idx] = val;
+      var sesh = this.sessions[idx];
+      const name = sesh.name;
+      const dayData = this.findLastDataPt(name);
+      const totalReps = this.getTotalRepsFromDay(dayData);
+      console.log(totalReps);
+      sesh.active = true;
+      this.sessions[idx] = sesh;
     },
     reset() {
       for (var idx in this.sessions) {
         this.sessions[idx].active = false;
       }
       this.selectedIdx = -1;
+    },
+    findLastDataPt(seshName) {
+      for (var day in this.dataObj.days) {
+        const nextDayData = this.dataObj.days[day];
+        const seshType = nextDayData.seshType;
+        if (seshType === seshName) {
+          return nextDayData;
+        }
+      }
+      return null;
+    },
+    getTotalRepsFromDay(dayData) {
+      var totalReps = 0;
+      if (dayData !== null) {
+        for (const set in dayData.sets) {
+          const nextReps = dayData.sets[set].reps;
+          totalReps += nextReps;
+        }
+      }
+      return totalReps;
     },
   },
 };

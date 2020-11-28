@@ -2,7 +2,7 @@
   <button v-if="!active" class="box" @click="select">
     <h1>{{ name }}</h1>
   </button>
-  <div v-else class="box"><h1>{{ name }}</h1></div>
+  <!-- <div v-else class="box"><h1>{{ name }}</h1></div> -->
   <section v-if="this.active">
     <div class="row" v-if="this.name === 'Pull'">
       <Set exercise-name="Pull Ups" :setNum="1" :reps="4" />
@@ -19,11 +19,22 @@
       <Set exercise-name="Squats" :setNum="2" :reps="10" />
       <Set exercise-name="Squats" :setNum="3" :reps="10" />
     </div>
+    <button @click="finished">Done!</button>
   </section>
 </template>
 
+/* "date": "2020-11-25",
+      "sets": [
+        {
+          "exercise": "Pull Ups",
+          "setNum": 1,
+          "reps": 4
+        }
+      ] */
+
 <script>
 import Set from "../components/Set.vue";
+/* var today = new Date().toJSON().slice(0,10); */
 export default {
   name: "ExerciseSession",
   components: {
@@ -38,10 +49,38 @@ export default {
       type: Boolean,
     },
   },
-  emits: ["selectedState"],
+  data() {
+    return {
+      woData: {
+        days: {
+          "2020-11-28": {
+            seshType: "Push",
+            sets: {
+              0: {
+                exercise: "Push Ups",
+                reps: 10,
+              },
+              1: {
+                exercise: "Push Ups",
+                reps: 10,
+              },
+              2: {
+                exercise: "Push Ups",
+                reps: 10,
+              },
+            },
+          },
+        },
+      },
+    };
+  },
+  emits: ["selectedState", "doneWorkout"],
   methods: {
     select() {
       this.$emit("selected-state");
+    },
+    finished() {
+      this.$emit("done-workout");
     },
   },
 };
