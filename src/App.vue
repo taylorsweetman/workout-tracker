@@ -1,27 +1,16 @@
 <template>
   <div><h1>Taylor's Workout App</h1></div>
-  <div class="row" v-if="selectedSession === ''">
-    <exercise-session class="box" name="Pull" @selected-state="setSelected" />
-    <exercise-session class="box" name="Push" @selected-state="setSelected" />
-    <exercise-session class="box" name="Legs" @selected-state="setSelected" />
+  <div class="row">
+    <exercise-session
+      v-for="(session, idx) in sessions"
+      :key="idx"
+      :active="session.active"
+      :name="session.name"
+      @selected-state="activateChild(idx)"
+    />
   </div>
-  <div class="row" v-else>
+  <div class="row" v-if="!noneActive">
     <exercise-session class="box" name="<-" @click="selectedSession = ''" />
-  </div>
-  <div class="row" v-if="selectedSession === 'Pull'">
-    <Set class="box" exercise-name="Pull Ups" :setNum="1" :reps="4" />
-    <Set class="box" exercise-name="Pull Ups" :setNum="2" :reps="4" />
-    <Set class="box" exercise-name="Pull Ups" :setNum="3" :reps="3" />
-  </div>
-  <div class="row" v-else-if="selectedSession === 'Push'">
-    <Set class="box" exercise-name="Push Ups" :setNum="1" :reps="10" />
-    <Set class="box" exercise-name="Push Ups" :setNum="2" :reps="10" />
-    <Set class="box" exercise-name="Push Ups" :setNum="3" :reps="10" />
-  </div>
-  <div class="row" v-else-if="selectedSession === 'Legs'">
-    <Set class="box" exercise-name="Squats" :setNum="1" :reps="10" />
-    <Set class="box" exercise-name="Squats" :setNum="2" :reps="10" />
-    <Set class="box" exercise-name="Squats" :setNum="3" :reps="10" />
   </div>
   <div class="row"><History class="box" /></div>
 </template>
@@ -29,23 +18,32 @@
 <script>
 import ExerciseSession from "./components/ExerciseSession.vue";
 import History from "./components/History.vue";
-import Set from "./components/Set.vue";
 
 export default {
   name: "App",
   components: {
     ExerciseSession,
     History,
-    Set,
   },
   data() {
     return {
-      selectedSession: "",
+      sessions: {
+        0: { name: "Pull", active: false },
+        1: { name: "Push", active: false },
+        2: { name: "Legs", active: false },
+      },
+      noneActive: true,
     };
   },
   methods: {
     setSelected(sessionName) {
       this.selectedSession = sessionName;
+    },
+    activateChild(idx) {
+      this.noneActive = false;
+      var val = this.sessions[idx];
+      val.active = true;
+      this.sessions[idx] = val;
     },
   },
 };
