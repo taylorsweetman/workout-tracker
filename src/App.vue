@@ -7,6 +7,7 @@
     <div v-if="selectedIdx !== -1">
       <exercise-session
         :active="true"
+        :data-obj="dataObj"
         :name="sessions[selectedIdx].name"
       ></exercise-session>
     </div>
@@ -48,12 +49,11 @@ export default {
   },
   methods: {
     activateChild(idx) {
+      // find session
       this.selectedIdx = idx;
       var sesh = this.sessions[idx];
-      const name = sesh.name;
-      const dayData = this.findLastDataPt(name);
-      const totalReps = this.getTotalRepsFromDay(dayData);
-      console.log(totalReps);
+
+      // change active value, and update array
       sesh.active = true;
       this.sessions[idx] = sesh;
     },
@@ -62,26 +62,6 @@ export default {
         this.sessions[idx].active = false;
       }
       this.selectedIdx = -1;
-    },
-    findLastDataPt(seshName) {
-      for (var day in this.dataObj.days) {
-        const nextDayData = this.dataObj.days[day];
-        const seshType = nextDayData.seshType;
-        if (seshType === seshName) {
-          return nextDayData;
-        }
-      }
-      return null;
-    },
-    getTotalRepsFromDay(dayData) {
-      var totalReps = 0;
-      if (dayData !== null) {
-        for (const set in dayData.sets) {
-          const nextReps = dayData.sets[set].reps;
-          totalReps += nextReps;
-        }
-      }
-      return totalReps;
     },
   },
 };

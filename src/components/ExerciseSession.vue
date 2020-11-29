@@ -2,35 +2,19 @@
   <button v-if="!active" class="box" @click="select">
     <h1>{{ name }}</h1>
   </button>
-  <!-- <div v-else class="box"><h1>{{ name }}</h1></div> -->
   <section v-if="this.active">
-    <div class="row" v-if="this.name === 'Pull'">
-      <Set exercise-name="Pull Ups" :setNum="1" :reps="4" />
-      <Set exercise-name="Pull Ups" :setNum="2" :reps="4" />
-      <Set exercise-name="Pull Ups" :setNum="3" :reps="3" />
-    </div>
-    <div class="row" v-else-if="this.name === 'Push'">
-      <Set exercise-name="Push Ups" :setNum="1" :reps="10" />
-      <Set exercise-name="Push Ups" :setNum="2" :reps="10" />
-      <Set exercise-name="Push Ups" :setNum="3" :reps="10" />
-    </div>
-    <div class="row" v-else-if="this.name === 'Legs'">
-      <Set exercise-name="Squats" :setNum="1" :reps="10" />
-      <Set exercise-name="Squats" :setNum="2" :reps="10" />
-      <Set exercise-name="Squats" :setNum="3" :reps="10" />
+    <div class="row">
+      <Set
+        v-for="(set, idx) in todayData.sets"
+        :key="idx"
+        :exercise-name="set.exercise"
+        :setNum="idx + 1"
+        :reps="set.reps"
+      />
     </div>
     <button @click="finished">Done!</button>
   </section>
 </template>
-
-/* "date": "2020-11-25",
-      "sets": [
-        {
-          "exercise": "Pull Ups",
-          "setNum": 1,
-          "reps": 4
-        }
-      ] */
 
 <script>
 import Set from "../components/Set.vue";
@@ -48,31 +32,26 @@ export default {
     active: {
       type: Boolean,
     },
+    dataObj: {
+      type: Object,
+    },
   },
   data() {
     return {
-      woData: {
-        days: {
-          "2020-11-28": {
-            seshType: "Push",
-            sets: {
-              0: {
-                exercise: "Push Ups",
-                reps: 10,
-              },
-              1: {
-                exercise: "Push Ups",
-                reps: 10,
-              },
-              2: {
-                exercise: "Push Ups",
-                reps: 10,
-              },
-            },
-          },
-        },
-      },
+      todayData: {},
     };
+  },
+  beforeMount() {
+    if (this.active) {
+      this.runDataCalcs(this.name);
+    }
+  },
+  watch: {
+    active(val) {
+      if (!val) {
+        this.todayData = {};
+      }
+    },
   },
   emits: ["selectedState", "doneWorkout"],
   methods: {
@@ -81,6 +60,54 @@ export default {
     },
     finished() {
       this.$emit("done-workout");
+    },
+    runDataCalcs(seshName) {
+      const lastDayData = this.findLastDataPt(seshName);
+      const totalReps = this.getTotalRepsFromDay(lastDayData);
+      const todayReps = this.findSetReps(totalReps);
+      const todayData = this.prepData(lastDayData, todayReps);
+      this.todayData = todayData;
+    },
+    findLastDataPt(seshName) {
+      for (var key in this.dataObj.days) {
+        var nextDayData = this.dataObj.days[key];
+        const seshType = nextDayData.seshType;
+        if (seshType === seshName) {
+          return nextDayData;
+        }
+      }
+      return null;
+    },
+    getTotalRepsFromDay(dayData) {
+      var totalReps = 0;
+      if (dayData !== null) {
+        for (const idx in dayData.sets) {
+          const nextReps = dayData.sets[idx].reps;
+          totalReps += nextReps;
+        }
+      }
+      return totalReps;
+    },
+    findSetReps(previousTotal) {
+      const goalTotal = previousTotal + 1;
+      const div = Math.floor(goalTotal / 3);
+      let rem = goalTotal % 3;
+
+      let tuple = [div, div, div];
+
+      for (var i = 0; rem > 0; rem--) {
+        tuple[i] = tuple[i] + 1;
+        i++;
+      }
+
+      return tuple;
+    },
+    prepData(lastDayData, todaySetTuple) {
+      const lastDaySets = lastDayData.sets;
+      lastDaySets[0].reps = todaySetTuple[0];
+      lastDaySets[1].reps = todaySetTuple[1];
+      lastDaySets[2].reps = todaySetTuple[2];
+      return lastDayData;
     },
   },
 };
