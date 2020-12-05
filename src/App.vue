@@ -22,7 +22,7 @@
     </div>
   </div>
 
-  <div class="row"><History class="box" /></div>
+  <div class="row"><History :hist="dataObj" class="box" /></div>
 </template>
 
 <script>

@@ -1,33 +1,45 @@
 <template>
-  <div class="diff-col">
-    <p>View History</p>
-  </div>
+  <button @click="toggleDisplay">View History</button>
+  <p v-if="display">
+    {{ hist }}
+  </p>
 </template>
 
 <script>
 export default {
   name: "History",
   props: {
-    hist: Object
+    hist: Object,
+  },
+  data() {
+    return {
+      display: false,
+    };
+  },
+  methods: {
+    toggleDisplay() {
+      this.display = !this.display;
+    },
   },
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.diff-col {
+button {
+  display: inline-block;
+  margin: 1%;
+
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+  margin: 1rem;
+  border-radius: 10px;
+  padding: 1rem;
   background-color: #30475e;
+  color: white;
+  text-align: center;
 }
 h3 {
   margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
 }
 a {
   color: #42b983;
