@@ -23,11 +23,14 @@
   </div>
 
   <div class="row"><History :hist="dataObj" class="box" /></div>
+  <register></register>
+
 </template>
 
 <script>
 import ExerciseSession from "./components/ExerciseSession.vue";
 import History from "./components/History.vue";
+import Register from "./components/Register.vue";
 import savedData from "./data.js";
 
 export default {
@@ -35,6 +38,7 @@ export default {
   components: {
     ExerciseSession,
     History,
+    Register,
   },
   data() {
     return {
