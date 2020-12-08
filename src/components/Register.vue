@@ -1,5 +1,6 @@
 <template>
   <button @click="submit">Register / Login</button>
+  <button @click="testWrite">Test DB</button>
 </template>
 
 
@@ -35,20 +36,16 @@ export default {
         .catch(function (error) {
           this.error = error.message;
         });
-
-      /* firebase
-        .auth()
-        .createUserWithEmailAndPassword(this.form.email, this.form.password)
-        .then((data) => {
-          data.user
-            .updateProfile({
-              displayName: this.form.name,
-            })
-            .then(() => {});
-        })
-        .catch((err) => {
-          this.error = err.message;
-        }); */
+    },
+    testWrite() {
+      var db = firebase.firestore();
+      db.collection("histories")
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            console.log(`${doc.id} => ${doc.data()}`);
+          });
+        });
     },
   },
 };
