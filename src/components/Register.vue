@@ -1,6 +1,6 @@
 <template>
-  <button @click="submit">Register / Login</button>
-  <button @click="testWrite">Test DB</button>
+  <button @click="performAuth">Register / Login</button>
+  <button @click="getUserDoc">Get User Data</button>
 </template>
 
 
@@ -15,36 +15,51 @@ export default {
         email: "",
         password: "",
       },
+      authdUser: null,
       error: null,
     };
   },
   methods: {
-    submit() {
+    performAuth() {
+      var that = this;
       var provider = new firebase.auth.GoogleAuthProvider();
       firebase
         .auth()
         .signInWithPopup(provider)
         .then(function (result) {
-          // This gives you a Google Access Token. You can use it to access the Google API.
-          var token = result.credential.accessToken;
-          console.log("token", token);
-          // The signed-in user info.
           var user = result.user;
-          console.log("user", user);
-          console.log("uid", user.uid);
+          that.authdUser = user;
         })
         .catch(function (error) {
-          this.error = error.message;
+          that.error = error.message;
         });
     },
-    testWrite() {
+    getUserDoc() {
+      var db = firebase.firestore();
+      var docRef = db.collection("histories").doc(this.authdUser.uid);
+      docRef
+        .get()
+        .then(function (doc) {
+          if (doc.exists) {
+            console.log("Document data:", doc.data());
+          } else {
+            console.log("No such document!");
+          }
+        })
+        .catch(function (error) {
+          console.log("Error getting document:", error);
+        });
+    },
+    setUserDoc(valueObj) {
       var db = firebase.firestore();
       db.collection("histories")
-        .get()
-        .then((querySnapshot) => {
-          querySnapshot.forEach((doc) => {
-            console.log(`${doc.id} => ${doc.data()}`);
-          });
+        .doc(this.authdUser.uid)
+        .set(valueObj)
+        .then(function () {
+          console.log("Document successfully written!");
+        })
+        .catch(function (error) {
+          console.error("Error writing document: ", error);
         });
     },
   },
