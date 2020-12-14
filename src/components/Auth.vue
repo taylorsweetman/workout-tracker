@@ -2,7 +2,7 @@
   <div v-if="authdUser === null">
     <button @click="performAuth">Register / Login</button>
   </div>
-  <div v-else><p>Logged In</p></div>
+  <div v-else><button @click="logout">Log Out</button></div>
 
   <button @click="getUserDoc">Get User Data</button>
 </template>
@@ -37,6 +37,22 @@ export default {
           that.authdUser = user;
         })
         .catch(function (error) {
+          that.error = error.message;
+        });
+    },
+    logout() {
+      var that = this;
+      firebase
+        .auth()
+        .signOut()
+        .then(function () {
+          // Sign-out successful.
+          console.log("sign out worked");
+          that.authdUser = null;
+        })
+        .catch(function (error) {
+          // An error happened.
+          console.log("error occured: " + error.message);
           that.error = error.message;
         });
     },
