@@ -7,7 +7,7 @@
     <div v-if="selectedIdx !== -1">
       <exercise-session
         :active="true"
-        :data-obj="dataObj"
+        :data-obj="userData"
         :name="sessions[selectedIdx].name"
       ></exercise-session>
     </div>
@@ -22,7 +22,7 @@
     </div>
   </div>
 
-  <div class="row"><History :hist="dataObj" class="box" /></div>
+  <div class="row"><History :hist="userData" class="box" /></div>
   <register></register>
 
 </template>
@@ -30,8 +30,7 @@
 <script>
 import ExerciseSession from "./components/ExerciseSession.vue";
 import History from "./components/History.vue";
-import Register from "./components/Register.vue";
-import savedData from "./data.js";
+import Register from "./components/Auth.vue";
 
 export default {
   name: "App",
@@ -47,7 +46,8 @@ export default {
         1: { name: "Pull", active: false },
         2: { name: "Legs", active: false },
       },
-      dataObj: savedData,
+      appUser: null,
+      userData: null,
       selectedIdx: -1,
     };
   },

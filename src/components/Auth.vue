@@ -1,13 +1,17 @@
 <template>
-  <button @click="performAuth">Register / Login</button>
+  <div v-if="authdUser === null">
+    <button @click="performAuth">Register / Login</button>
+  </div>
+  <div v-else><p>Logged In</p></div>
+
   <button @click="getUserDoc">Get User Data</button>
 </template>
 
 
 <script>
-import firebase from 'firebase/app';
-import 'firebase/auth';
-import 'firebase/firestore';
+import firebase from "firebase/app";
+import "firebase/auth";
+import "firebase/firestore";
 
 export default {
   data() {

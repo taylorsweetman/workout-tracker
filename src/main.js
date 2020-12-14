@@ -1,8 +1,6 @@
 import { createApp } from 'vue';
 import App from './App.vue';
 import firebase from 'firebase/app';
-import 'firebase/auth';
-import 'firebase/firestore';
 
 const configOptions = {
 	apiKey: 'AIzaSyA7a901k5rFaSoJGnRXaa7IbuJruQVh_pM',
