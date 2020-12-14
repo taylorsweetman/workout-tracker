@@ -23,21 +23,21 @@
   </div>
 
   <div class="row"><History :hist="userData" class="box" /></div>
-  <register></register>
+  <auth></auth>
 
 </template>
 
 <script>
 import ExerciseSession from "./components/ExerciseSession.vue";
 import History from "./components/History.vue";
-import Register from "./components/Auth.vue";
+import Auth from "./components/Auth.vue";
 
 export default {
   name: "App",
   components: {
     ExerciseSession,
     History,
-    Register,
+    Auth,
   },
   data() {
     return {
