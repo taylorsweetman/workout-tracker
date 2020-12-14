@@ -25,6 +25,17 @@ export default {
       error: null,
     };
   },
+  watch: {
+    // TODO --> figure out this await/async stuff below
+    async authdUser(val) {
+      if (val !== null) {
+        console.log("val.uid:", val.uid);
+        const userData = await this.getUserDoc(val.uid);
+        console.log("userData:", userData);
+        this.$emit("doc-load", userData);
+      }
+    },
+  },
   methods: {
     performAuth() {
       var that = this;
@@ -35,6 +46,8 @@ export default {
         .then(function (result) {
           var user = result.user;
           that.authdUser = user;
+          that.$emit("auth-in", user);
+          console.log("uid:", user.uid);
         })
         .catch(function (error) {
           that.error = error.message;
@@ -56,14 +69,15 @@ export default {
           that.error = error.message;
         });
     },
-    getUserDoc() {
+    getUserDoc(uid) {
       var db = firebase.firestore();
-      var docRef = db.collection("histories").doc(this.authdUser.uid);
+      var docRef = db.collection("histories").doc(uid);
       docRef
         .get()
         .then(function (doc) {
           if (doc.exists) {
-            console.log("Document data:", doc.data());
+            console.log("docData: ", doc.data());
+            return doc.data();
           } else {
             console.log("No such document!");
           }
