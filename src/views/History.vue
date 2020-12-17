@@ -1,6 +1,5 @@
 <template>
-  <button @click="toggleDisplay">View History</button>
-  <div class="div-table" v-if="display">
+  <div class="div-table">
     <div class="div-table-row-head">
       <div class="div-table-col">Date</div>
       <div class="div-table-col">Exercise</div>
@@ -19,27 +18,24 @@
 </template>
 
 <script>
+import dataObj from "../data";
+
 export default {
   name: "History",
-  props: {
-    hist: Object,
-  },
   data() {
     return {
       display: false,
       uiHist: [],
+      // TODO use the store instead of this.hist.days
+      hist: dataObj,
     };
   },
+  beforeMount() {
+    this.buildUIHist();
+  },
   methods: {
-    toggleDisplay() {
-      this.display = !this.display;
-      if (this.display) {
-        this.buildUIHist();
-      } else {
-        this.uiHist = [];
-      }
-    },
     buildUIHist() {
+      // TODO use the store instead of this.hist.days
       Object.keys(this.hist.days).forEach((dateIdx) => {
         const date = dateIdx;
         const sets = this.hist.days[date].sets;
@@ -58,17 +54,6 @@ export default {
       });
     },
   },
-
-  // I need a list of objs
-  /*
-  {
-    date: "",
-    exercise: "",
-    set1reps: 0,
-    set2reps: 1,
-    set3reps: 2,
-  }
-  */
 };
 </script>
 
@@ -93,7 +78,7 @@ export default {
   color: black;
 }
 .div-table-col {
-  float: left; 
+  float: left;
   display: table-column;
   width: 100px;
   color: white;

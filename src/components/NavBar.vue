@@ -1,7 +1,7 @@
 <template>
   <div class="row">
-    <router-link to="/home">Home</router-link>
-    <router-link to="/history">History</router-link>
+    <router-link to="/home">Home | </router-link>
+    <router-link to="/history">History | </router-link>
     <button class="box">Sign in</button>
   </div>
   <router-view />

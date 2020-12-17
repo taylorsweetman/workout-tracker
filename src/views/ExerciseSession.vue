@@ -1,8 +1,5 @@
 <template>
-  <button v-if="!active" class="box" @click="select">
-    <h1>{{ name }}</h1>
-  </button>
-  <section v-if="this.active">
+  <section>
     <div class="row">
       <Set
         v-for="(set, idx) in todayData.sets"
@@ -18,6 +15,7 @@
 
 <script>
 import Set from "../components/Set.vue";
+import dataObj from "../data.js";
 /* var today = new Date().toJSON().slice(0,10); */
 export default {
   name: "ExerciseSession",
@@ -25,39 +23,22 @@ export default {
     Set,
   },
   props: {
-    name: {
+    localName: {
       type: String,
       required: true,
-    },
-    active: {
-      type: Boolean,
-    },
-    dataObj: {
-      type: Object,
     },
   },
   data() {
     return {
+      dataObjLocal: dataObj,
       todayData: {},
     };
   },
   beforeMount() {
-    if (this.active) {
-      this.runDataCalcs(this.name);
-    }
-  },
-  watch: {
-    active(val) {
-      if (!val) {
-        this.todayData = {};
-      }
-    },
+    this.runDataCalcs(this.localName);
   },
   emits: ["selectedState", "doneWorkout"],
   methods: {
-    select() {
-      this.$emit("selected-state");
-    },
     finished() {
       this.$emit("done-workout");
     },
@@ -69,8 +50,8 @@ export default {
       this.todayData = todayData;
     },
     findLastDataPt(seshName) {
-      for (var key in this.dataObj.days) {
-        var nextDayData = this.dataObj.days[key];
+      for (var key in this.dataObjLocal.days) {
+        var nextDayData = this.dataObjLocal.days[key];
         const seshType = nextDayData.seshType;
         if (seshType === seshName) {
           return nextDayData;

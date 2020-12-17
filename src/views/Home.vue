@@ -1,5 +1,12 @@
 <template>
   <div class="row">
+    <router-link to="/exercise/Push">Push | </router-link>
+    <router-link to="/exercise/Pull">Pull | </router-link>
+    <router-link to="/exercise/Legs">Legs</router-link>
+  </div>
+  <router-view />
+
+  <!-- <div class="row">
     <div v-if="selectedIdx !== -1">
       <exercise-session
         :active="true"
@@ -18,21 +25,16 @@
     </div>
   </div>
 
-  <auth @auth-in="popData($event)" @auth-out="unPopData()"></auth>
+  <auth @auth-in="popData($event)" @auth-out="unPopData()"></auth> -->
 </template>
 
 <script>
-import ExerciseSession from "../components/ExerciseSession.vue";
-import Auth from "../components/Auth.vue";
 import firebase from "firebase/app";
 import "firebase/firestore";
 
 export default {
   name: "Home",
-  components: {
-    ExerciseSession,
-    Auth,
-  },
+  components: {},
   data() {
     return {
       sessions: {
@@ -88,7 +90,7 @@ export default {
     },
     setUserData(userDataLocal) {
       this.userData = userDataLocal;
-    }, 
+    },
     setUserDoc(valueObj) {
       var db = firebase.firestore();
       db.collection("histories")
