@@ -1,31 +1,10 @@
 <template>
   <div class="row">
-    <router-link to="/exercise/Push">Push | </router-link>
-    <router-link to="/exercise/Pull">Pull | </router-link>
-    <router-link to="/exercise/Legs">Legs</router-link>
+    <router-link to="/exercise/Push" class="box">Push</router-link>
+    <router-link to="/exercise/Pull" class="box">Pull</router-link>
+    <router-link to="/exercise/Legs" class="box">Legs</router-link>
   </div>
   <router-view />
-
-  <!-- <div class="row">
-    <div v-if="selectedIdx !== -1">
-      <exercise-session
-        :active="true"
-        :data-obj="userData"
-        :name="sessions[selectedIdx].name"
-      ></exercise-session>
-    </div>
-    <div v-else>
-      <exercise-session
-        v-for="(session, idx) in sessions"
-        :key="idx"
-        :active="session.active"
-        :name="session.name"
-        @selected-state="activateChild(idx)"
-      />
-    </div>
-  </div>
-
-  <auth @auth-in="popData($event)" @auth-out="unPopData()"></auth> -->
 </template>
 
 <script>
