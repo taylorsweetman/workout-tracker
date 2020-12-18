@@ -1,20 +1,17 @@
 <template>
   <div class="row">
-    <router-link to="/home">Home | </router-link>
-    <router-link to="/history">History | </router-link>
-    <button class="box">Sign in</button>
+    <router-link to="/home" tag="button" class="box">Home</router-link>
+    <router-link to="/history" tag="button" class="box">History</router-link>
+    <auth></auth>
   </div>
   <router-view />
-
-  <!-- <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </div>
-   -->
 </template>
 
 <script>
+import Auth from "./Auth.vue";
+
 export default {
   name: "NavBar",
+  components: { Auth },
 };
 </script>

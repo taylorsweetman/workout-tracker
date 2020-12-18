@@ -5,6 +5,10 @@ import ExerciseSession from '../views/ExerciseSession.vue';
 
 const routes = [
 	{
+		path: '/',
+		component: Home
+	},
+	{
 		path: '/home',
 		name: 'Home',
 		component: Home
