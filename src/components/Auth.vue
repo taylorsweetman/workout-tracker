@@ -1,8 +1,10 @@
 <template>
-  <div v-if="authdUser === null">
-    <button @click="performAuth">Register / Login</button>
+  <div v-if="authdUser === null" class="box" @click="performAuth">
+    <u>Register / Login</u>
   </div>
-  <div v-else><button @click="logout">Log Out</button></div>
+  <div v-else class="box" @click="logout">
+    <u>Log Out</u>
+  </div>
 </template>
 
 
@@ -55,7 +57,7 @@ export default {
 </script>
 
 <style scoped>
-button {
+.box {
   display: inline-block;
   margin: 1%;
 
@@ -66,5 +68,8 @@ button {
   background-color: #f05454;
   color: white;
   text-align: center;
+}
+u {
+  cursor: pointer;
 }
 </style>
