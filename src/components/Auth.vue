@@ -1,9 +1,9 @@
 <template>
   <div v-if="authdUser === null" class="box" @click="performAuth">
-    <u>Register / Login</u>
+    Register / Login
   </div>
   <div v-else class="box" @click="logout">
-    <u>Log Out</u>
+    Log Out
   </div>
 </template>
 
@@ -58,18 +58,11 @@ export default {
 
 <style scoped>
 .box {
-  display: inline-block;
-  margin: 1%;
-
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
-  margin: 1rem;
   border-radius: 10px;
   padding: 1rem;
   background-color: #f05454;
   color: white;
-  text-align: center;
 }
-u {
-  cursor: pointer;
-}
+
 </style>

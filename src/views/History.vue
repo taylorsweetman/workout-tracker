@@ -1,4 +1,5 @@
 <template>
+  <br /><br />
   <div class="div-table">
     <div class="div-table-row-head">
       <div class="div-table-col">Date</div>
@@ -85,8 +86,5 @@ export default {
 }
 h3 {
   margin: 40px 0 0;
-}
-a {
-  color: #42b983;
 }
 </style>

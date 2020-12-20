@@ -1,5 +1,4 @@
 <template>
-  <div><h1>Taylor's Workout App</h1></div>
   <nav-bar></nav-bar>
 </template>
 
