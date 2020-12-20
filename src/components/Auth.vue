@@ -1,8 +1,8 @@
 <template>
-  <div v-if="authdUser === null">
-    <button @click="performAuth">Register / Login</button>
+  <div v-if="authdUser === null" class="box" @click="performAuth">
+    Register / Login
   </div>
-  <div v-else><button @click="logout">Log Out</button></div>
+  <div v-else class="box" @click="logout">Log Out</div>
 </template>
 
 
@@ -26,12 +26,12 @@ export default {
       firebase
         .auth()
         .signInWithPopup(provider)
-        .then(function (result) {
+        .then((result) => {
           var user = result.user;
           that.authdUser = user;
           that.$emit("auth-in", user);
         })
-        .catch(function (error) {
+        .catch((error) => {
           that.error = error.message;
         });
     },
@@ -40,12 +40,12 @@ export default {
       firebase
         .auth()
         .signOut()
-        .then(function () {
+        .then(() => {
           console.log("sign out worked");
           that.authdUser = null;
           that.$emit("auth-out");
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log("error occured: " + error.message);
           that.error = error.message;
         });
@@ -53,3 +53,13 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.box {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+  border-radius: 10px;
+  padding: 1rem;
+  background-color: #f05454;
+  color: white;
+}
+</style>
