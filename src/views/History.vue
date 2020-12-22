@@ -19,16 +19,17 @@
 </template>
 
 <script>
-import dataObj from "../data";
+import { useStore } from "../store";
 
 export default {
   name: "History",
+  setup() {
+    return { state: useStore() };
+  },
   data() {
     return {
       display: false,
       uiHist: [],
-      // TODO use the store instead of this.hist.days
-      hist: dataObj,
     };
   },
   beforeMount() {
@@ -37,9 +38,10 @@ export default {
   methods: {
     buildUIHist() {
       // TODO use the store instead of this.hist.days
-      Object.keys(this.hist.days).forEach((dateIdx) => {
+      const userData = this.state.store.userData;
+      Object.keys(userData.days).forEach((dateIdx) => {
         const date = dateIdx;
-        const sets = this.hist.days[date].sets;
+        const sets = userData.days[date].sets;
         const exercise = sets[0].exercise;
         const set1reps = sets[0].reps;
         const set2reps = sets[1].reps;

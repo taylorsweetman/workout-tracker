@@ -1,15 +1,40 @@
 <template>
-  <nav-bar></nav-bar>
+  <nav-bar @new-user="addUserDataToStore"></nav-bar>
 </template>
 
 <script>
 import NavBar from "./components/NavBar.vue";
+import firebase from "firebase/app";
+import "firebase/firestore";
+import { useStore } from "./store";
 
 export default {
   name: "App",
+   setup() {
+    return { state: useStore() };
+  },
   components: {
     NavBar,
   },
+  methods: {
+    addUserDataToStore() {
+      var that = this;
+      var db = firebase.firestore();
+      var docRef = db.collection("histories").doc(this.state.store.user.uid);
+      docRef
+        .get()
+        .then(function (doc) {
+          if (doc.exists) {
+            that.state.setUserData(doc.data());
+          } else {
+            console.log("No such document!");
+          }
+        })
+        .catch(function (error) {
+          console.log("Error getting document:", error);
+        });
+    }
+  }
 };
 </script>
 

@@ -5,7 +5,7 @@
     <router-link v-show="showHistory" to="/history" class="box"
       >History</router-link
     >
-    <auth class="box"></auth>
+    <auth class="box" @new-user="newUser"></auth>
   </div>
   <router-view />
 </template>
@@ -16,6 +16,7 @@ import Auth from "./Auth.vue";
 export default {
   name: "NavBar",
   components: { Auth },
+  emits: ["new-user"],
   computed: {
     showHome() {
       let show = true;
@@ -42,6 +43,9 @@ export default {
       } else {
         return null;
       }
+    },
+    newUser() {
+      this.$emit("new-user");
     },
   },
 };

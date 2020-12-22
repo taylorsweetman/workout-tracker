@@ -16,6 +16,7 @@ export default {
   setup() {
     return { state: useStore() };
   },
+  emits: ['new-user'],
   data() {
     return {
       error: null,
@@ -30,12 +31,11 @@ export default {
         .signInWithPopup(provider)
         .then((result) => {
           var user = result.user;
-          that.authdUser = user;
           that.state.setUser(user);
+          that.$emit('new-user');
         })
         .catch((error) => {
           that.error = error.message;
-          that.state.setUser(error.message);
         });
     },
     logout() {
@@ -44,12 +44,10 @@ export default {
         .auth()
         .signOut()
         .then(() => {
-          console.log("sign out worked");
           that.state.setUser(null);
         })
         .catch((error) => {
           that.error = error.message;
-          that.state.setUser(error.message);
         });
     },
   },

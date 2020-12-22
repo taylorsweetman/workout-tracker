@@ -1,17 +1,14 @@
 <template>
   <div class="row">
-    <router-link to="/exercise/Push" class="box">Push</router-link>
-    <router-link to="/exercise/Pull" class="box">Pull</router-link>
-    <router-link to="/exercise/Legs" class="box">Legs</router-link>
-    <p>hello tay: {{ state }}</p>
-    <button @click="state.setUser(appUser)">increment</button>
+    <router-link to="/exercise/push_ups" class="box">Push Ups</router-link>
+    <router-link to="/exercise/pull_ups" class="box">Pull Ups</router-link>
+    <router-link to="/exercise/squats" class="box">Squats</router-link>
+    <p>{{ state }}</p>
   </div>
   <router-view />
 </template>
 
 <script>
-import firebase from "firebase/app";
-import "firebase/firestore";
 import { useStore } from "../store";
 
 export default {
@@ -47,46 +44,6 @@ export default {
         this.sessions[idx].active = false;
       }
       this.selectedIdx = -1;
-    },
-    popData(user) {
-      this.appUser = user;
-      this.getUserDoc(user.uid);
-    },
-    unPopData() {
-      this.appUser = null;
-      this.userData = null;
-    },
-    getUserDoc(uid) {
-      var that = this;
-      var db = firebase.firestore();
-      var docRef = db.collection("histories").doc(uid);
-      docRef
-        .get()
-        .then(function (doc) {
-          if (doc.exists) {
-            that.setUserData(doc.data());
-          } else {
-            console.log("No such document!");
-          }
-        })
-        .catch(function (error) {
-          console.log("Error getting document:", error);
-        });
-    },
-    setUserData(userDataLocal) {
-      this.userData = userDataLocal;
-    },
-    setUserDoc(valueObj) {
-      var db = firebase.firestore();
-      db.collection("histories")
-        .doc(this.authdUser.uid)
-        .set(valueObj)
-        .then(function () {
-          console.log("Document successfully written!");
-        })
-        .catch(function (error) {
-          console.error("Error writing document: ", error);
-        });
     },
   },
 };
