@@ -1,7 +1,8 @@
 import { createApp } from 'vue';
-import App from './App.vue';
+import { stateSymbol, createState } from './store';
+import App from './App';
 import firebase from 'firebase/app';
-import router from './router'
+import router from './router';
 
 const configOptions = {
 	apiKey: 'AIzaSyA7a901k5rFaSoJGnRXaa7IbuJruQVh_pM',
@@ -15,5 +16,7 @@ const configOptions = {
 
 firebase.initializeApp(configOptions);
 
-const app = createApp(App).use(router);
-app.mount('#app');
+createApp(App)
+	.use(router)
+	.provide(stateSymbol, createState())
+	.mount('#app');

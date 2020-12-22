@@ -3,6 +3,8 @@
     <router-link to="/exercise/Push" class="box">Push</router-link>
     <router-link to="/exercise/Pull" class="box">Pull</router-link>
     <router-link to="/exercise/Legs" class="box">Legs</router-link>
+    <p>hello tay: {{ state }}</p>
+    <button @click="state.counter++">increment</button>
   </div>
   <router-view />
 </template>
@@ -10,10 +12,14 @@
 <script>
 import firebase from "firebase/app";
 import "firebase/firestore";
+import { useState } from "../store";
 
 export default {
   name: "Home",
   components: {},
+  setup() {
+    return { state: useState() };
+  },
   data() {
     return {
       sessions: {
