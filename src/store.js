@@ -4,8 +4,8 @@ export const storeSymbol = Symbol('store');
 
 export const createStore = () => {
 	const state = reactive({
-        user: {},
-        userData: {}
+        user: null,
+        userData: null
 	});
 	const setUser = function(newUser) {
 		state.user = newUser;
