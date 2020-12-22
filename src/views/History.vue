@@ -1,7 +1,5 @@
 <template>
   <br /><br />
-  <p>hello tay: {{ state }}</p>
-  <button @click="state.increment()">increment</button>
   <div class="div-table">
     <div class="div-table-row-head">
       <div class="div-table-col">Date</div>
@@ -22,13 +20,9 @@
 
 <script>
 import dataObj from "../data";
-import { useStore } from "../store";
 
 export default {
   name: "History",
-  setup() {
-    return { state: useStore() };
-  },
   data() {
     return {
       display: false,

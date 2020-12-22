@@ -1,12 +1,20 @@
 import { inject, reactive, readonly } from 'vue';
 
-export const storeSymbol = Symbol('state');
+export const storeSymbol = Symbol('store');
 
 export const createStore = () => {
-	const state = reactive({ counter: 0 });
-	const increment = () => state.counter++;
+	const state = reactive({
+        user: {},
+        userData: {}
+	});
+	const setUser = function(newUser) {
+		state.user = newUser;
+    };
+    const setUserData = function(newUserData) {
+		state.userData = newUserData;
+	};
 
-	return { increment, state: readonly(state) };
+	return { setUser, setUserData, store: readonly(state) };
 };
 
 export const useStore = () => inject(storeSymbol);

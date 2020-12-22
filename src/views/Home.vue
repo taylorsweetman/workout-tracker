@@ -4,7 +4,7 @@
     <router-link to="/exercise/Pull" class="box">Pull</router-link>
     <router-link to="/exercise/Legs" class="box">Legs</router-link>
     <p>hello tay: {{ state }}</p>
-    <button @click="state.increment()">increment</button>
+    <button @click="state.setUser(appUser)">increment</button>
   </div>
   <router-view />
 </template>
