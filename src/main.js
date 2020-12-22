@@ -1,5 +1,5 @@
 import { createApp } from 'vue';
-import { stateSymbol, createState } from './store';
+import { storeSymbol, createStore } from './store';
 import App from './App';
 import firebase from 'firebase/app';
 import router from './router';
@@ -18,5 +18,5 @@ firebase.initializeApp(configOptions);
 
 createApp(App)
 	.use(router)
-	.provide(stateSymbol, createState())
+	.provide(storeSymbol, createStore())
 	.mount('#app');

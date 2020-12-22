@@ -4,7 +4,7 @@
     <router-link to="/exercise/Pull" class="box">Pull</router-link>
     <router-link to="/exercise/Legs" class="box">Legs</router-link>
     <p>hello tay: {{ state }}</p>
-    <button @click="state.counter++">increment</button>
+    <button @click="state.increment()">increment</button>
   </div>
   <router-view />
 </template>
@@ -12,13 +12,13 @@
 <script>
 import firebase from "firebase/app";
 import "firebase/firestore";
-import { useState } from "../store";
+import { useStore } from "../store";
 
 export default {
   name: "Home",
   components: {},
   setup() {
-    return { state: useState() };
+    return { state: useStore() };
   },
   data() {
     return {
