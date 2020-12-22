@@ -6,6 +6,7 @@ import ExerciseSession from '../views/ExerciseSession.vue';
 const routes = [
 	{
 		path: '/',
+		name: 'Root',
 		component: Home
 	},
 	{
@@ -15,12 +16,12 @@ const routes = [
 	},
 	{
 		path: '/history',
-		name: History,
+		name: 'History',
 		component: History
 	},
 	{
 		path: '/exercise/:localName',
-		name: ExerciseSession,
+		name: 'ExerciseSession',
 		component: ExerciseSession,
 		props: true
 	}

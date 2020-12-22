@@ -1,8 +1,10 @@
 <template>
   <div class="topnav">
     <h1>Taylor's Workout App</h1>
-    <router-link to="/home" class="box">Home</router-link>
-    <router-link to="/history" class="box">History</router-link>
+    <router-link v-show="showHome" to="/home" class="box">Home</router-link>
+    <router-link v-show="showHistory" to="/history" class="box"
+      >History</router-link
+    >
     <auth class="box"></auth>
   </div>
   <router-view />
@@ -14,6 +16,34 @@ import Auth from "./Auth.vue";
 export default {
   name: "NavBar",
   components: { Auth },
+  computed: {
+    showHome() {
+      let show = true;
+      if (
+        this.currentRouteName() === "Home" ||
+        this.currentRouteName() === "Root"
+      ) {
+        show = false;
+      }
+      return show;
+    },
+    showHistory() {
+      let show = true;
+      if (this.currentRouteName() === "History") {
+        show = false;
+      }
+      return show;
+    },
+  },
+  methods: {
+    currentRouteName() {
+      if (this.$route.name) {
+        return this.$route.name;
+      } else {
+        return null;
+      }
+    },
+  },
 };
 </script>
 
