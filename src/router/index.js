@@ -1,7 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
-import Home from '../views/Home.vue';
-import History from '../views/History.vue';
-import ExerciseSession from '../views/ExerciseSession.vue';
+import Home from '../views/Home';
+import History from '../views/History';
+import ExerciseSession from '../views/ExerciseSession';
 
 const routes = [
 	{

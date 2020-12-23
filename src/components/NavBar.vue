@@ -11,12 +11,12 @@
 </template>
 
 <script>
-import Auth from "./Auth.vue";
+import Auth from "./Auth";
 
 export default {
   name: "NavBar",
   components: { Auth },
-  emits: ["new-user"],
+  emits: ["newUser"],
   computed: {
     showHome() {
       let show = true;

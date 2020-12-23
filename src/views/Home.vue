@@ -3,7 +3,6 @@
     <router-link to="/exercise/push_ups" class="box">Push Ups</router-link>
     <router-link to="/exercise/pull_ups" class="box">Pull Ups</router-link>
     <router-link to="/exercise/squats" class="box">Squats</router-link>
-    <p>{{ state }}</p>
   </div>
   <router-view />
 </template>
@@ -13,38 +12,8 @@ import { useStore } from "../store";
 
 export default {
   name: "Home",
-  components: {},
   setup() {
-    return { state: useStore() };
-  },
-  data() {
-    return {
-      sessions: {
-        0: { name: "Push", active: false },
-        1: { name: "Pull", active: false },
-        2: { name: "Legs", active: false },
-      },
-      appUser: null,
-      userData: null,
-      selectedIdx: -1,
-    };
-  },
-  methods: {
-    activateChild(idx) {
-      // find session
-      this.selectedIdx = idx;
-      var sesh = this.sessions[idx];
-
-      // change active value, and update array
-      sesh.active = true;
-      this.sessions[idx] = sesh;
-    },
-    reset() {
-      for (var idx in this.sessions) {
-        this.sessions[idx].active = false;
-      }
-      this.selectedIdx = -1;
-    },
+    return { store: useStore() };
   },
 };
 </script>

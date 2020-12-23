@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import NavBar from "./components/NavBar.vue";
+import NavBar from "./components/NavBar";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import { useStore } from "./store";
@@ -11,7 +11,7 @@ import { useStore } from "./store";
 export default {
   name: "App",
    setup() {
-    return { state: useStore() };
+    return { store: useStore() };
   },
   components: {
     NavBar,
@@ -20,12 +20,12 @@ export default {
     addUserDataToStore() {
       var that = this;
       var db = firebase.firestore();
-      var docRef = db.collection("histories").doc(this.state.store.user.uid);
+      var docRef = db.collection("histories").doc(this.store.state.user.uid);
       docRef
         .get()
         .then(function (doc) {
           if (doc.exists) {
-            that.state.setUserData(doc.data());
+            that.store.setUserData(doc.data());
           } else {
             console.log("No such document!");
           }

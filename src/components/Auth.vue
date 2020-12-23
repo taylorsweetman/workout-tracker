@@ -1,5 +1,5 @@
 <template>
-  <div v-if="state.store.user === null" class="box" @click="performAuth">
+  <div v-if="store.state.user === null" class="box" @click="performAuth">
     Register / Login
   </div>
   <div v-else class="box" @click="logout">Log Out</div>
@@ -14,9 +14,9 @@ import { useStore } from "../store";
 
 export default {
   setup() {
-    return { state: useStore() };
+    return { store: useStore() };
   },
-  emits: ['new-user'],
+  emits: ['newUser'],
   data() {
     return {
       error: null,
@@ -31,7 +31,7 @@ export default {
         .signInWithPopup(provider)
         .then((result) => {
           var user = result.user;
-          that.state.setUser(user);
+          that.store.setUser(user);
           that.$emit('new-user');
         })
         .catch((error) => {
@@ -44,7 +44,7 @@ export default {
         .auth()
         .signOut()
         .then(() => {
-          that.state.setUser(null);
+          that.store.setUser(null);
         })
         .catch((error) => {
           that.error = error.message;

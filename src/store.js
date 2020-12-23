@@ -1,6 +1,6 @@
 import { inject, reactive, readonly } from 'vue';
 
-export const storeSymbol = Symbol('store');
+export const storeSymbol = Symbol('state');
 
 export const createStore = () => {
 	const state = reactive({
@@ -14,7 +14,7 @@ export const createStore = () => {
 		state.userData = newUserData;
 	};
 
-	return { setUser, setUserData, store: readonly(state) };
+	return { setUser, setUserData, state: readonly(state) };
 };
 
 export const useStore = () => inject(storeSymbol);

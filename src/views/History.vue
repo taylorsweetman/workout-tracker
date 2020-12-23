@@ -24,7 +24,7 @@ import { useStore } from "../store";
 export default {
   name: "History",
   setup() {
-    return { state: useStore() };
+    return { store: useStore() };
   },
   data() {
     return {
@@ -38,7 +38,7 @@ export default {
   methods: {
     buildUIHist() {
       // TODO use the store instead of this.hist.days
-      const userData = this.state.store.userData;
+      const userData = this.store.state.userData;
       Object.keys(userData.days).forEach((dateIdx) => {
         const date = dateIdx;
         const sets = userData.days[date].sets;
