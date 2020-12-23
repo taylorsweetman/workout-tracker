@@ -39,9 +39,8 @@ export default {
     };
   },
   beforeMount() {
-    // TODO, clean up line below. NO JSON CLONING
-    this.dataLocal = JSON.parse(JSON.stringify(this.store.state.userData.days));
-    this.runDataCalcs(this.localName);
+    this.dataLocal = this.store.getState().userData.days;
+    this.runDataCalcs();
   },
   emits: ["selectedState", "doneWorkout"],
   methods: {

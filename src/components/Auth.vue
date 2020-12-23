@@ -1,5 +1,5 @@
 <template>
-  <div v-if="store.state.user === null" class="box" @click="performAuth">
+  <div v-if="store.getState().user === null" class="box" @click="performAuth">
     Register / Login
   </div>
   <div v-else class="box" @click="logout">Log Out</div>

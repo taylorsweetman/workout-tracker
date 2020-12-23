@@ -37,8 +37,7 @@ export default {
   },
   methods: {
     buildUIHist() {
-      // TODO use the store instead of this.hist.days
-      const userData = this.store.state.userData;
+      const userData = this.store.getState().userData;
       Object.keys(userData.days).forEach((dateIdx) => {
         const date = dateIdx;
         const sets = userData.days[date].sets;

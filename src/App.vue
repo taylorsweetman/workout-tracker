@@ -20,7 +20,7 @@ export default {
     addUserDataToStore() {
       var that = this;
       var db = firebase.firestore();
-      var docRef = db.collection("histories").doc(this.store.state.user.uid);
+      var docRef = db.collection("histories").doc(this.store.getState().user.uid);
       docRef
         .get()
         .then(function (doc) {
