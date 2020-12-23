@@ -7,6 +7,8 @@
         :exercise-name="set.exercise"
         :setNum="idx + 1"
         :reps="set.reps"
+        @set-done="setDone"
+        @set-undone="setUndone"
       />
     </div>
     <button @click="finished">Done!</button>
@@ -16,7 +18,6 @@
 <script>
 import Set from "../components/Set";
 import { useStore } from "../store";
-/* var today = new Date().toJSON().slice(0,10); */
 
 export default {
   name: "ExerciseSession",
@@ -35,7 +36,8 @@ export default {
   data() {
     return {
       dataLocal: {},
-      todayData: { sets: [] },
+      todayData: {},
+      repsTuple: [0, 0, 0],
     };
   },
   beforeMount() {
@@ -44,7 +46,18 @@ export default {
   },
   emits: ["selectedState", "doneWorkout"],
   methods: {
+    setDone(completedReps, setNum) {
+      this.repsTuple[setNum - 1] = completedReps;
+    },
+    setUndone(setNum) {
+      this.repsTuple[setNum - 1] = 0;
+    },
     finished() {
+      for (var i = 0; i < 3; i++) {
+        this.todayData.sets[i].reps = this.repsTuple[i];
+      }
+      var today = new Date().toJSON().slice(0, 10);
+      this.dataLocal[today] = this.todayData;
       this.$emit("done-workout");
     },
     runDataCalcs() {
@@ -93,6 +106,8 @@ export default {
       this.todayData.sets[0].reps = newRepsTuple[0];
       this.todayData.sets[1].reps = newRepsTuple[1];
       this.todayData.sets[2].reps = newRepsTuple[2];
+
+      this.todayData.seshType = this.localName;
     },
   },
 };
