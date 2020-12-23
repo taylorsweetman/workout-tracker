@@ -1,11 +1,12 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
-import Home from '../views/Home.vue';
-import History from '../views/History.vue';
-import ExerciseSession from '../views/ExerciseSession.vue';
+import Home from '../views/Home';
+import History from '../views/History';
+import ExerciseSession from '../views/ExerciseSession';
 
 const routes = [
 	{
 		path: '/',
+		name: 'Root',
 		component: Home
 	},
 	{
@@ -15,12 +16,12 @@ const routes = [
 	},
 	{
 		path: '/history',
-		name: History,
+		name: 'History',
 		component: History
 	},
 	{
 		path: '/exercise/:localName',
-		name: ExerciseSession,
+		name: 'ExerciseSession',
 		component: ExerciseSession,
 		props: true
 	}

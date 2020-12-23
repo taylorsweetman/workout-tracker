@@ -1,19 +1,53 @@
 <template>
   <div class="topnav">
     <h1>Taylor's Workout App</h1>
-    <router-link to="/home" class="box">Home</router-link>
-    <router-link to="/history" class="box">History</router-link>
-    <auth class="box"></auth>
+    <router-link v-show="showHome" to="/home" class="box">Home</router-link>
+    <router-link v-show="showHistory" to="/history" class="box"
+      >History</router-link
+    >
+    <auth class="box" @new-user="newUser"></auth>
   </div>
   <router-view />
 </template>
 
 <script>
-import Auth from "./Auth.vue";
+import Auth from "./Auth";
 
 export default {
   name: "NavBar",
   components: { Auth },
+  emits: ["newUser"],
+  computed: {
+    showHome() {
+      let show = true;
+      if (
+        this.currentRouteName() === "Home" ||
+        this.currentRouteName() === "Root"
+      ) {
+        show = false;
+      }
+      return show;
+    },
+    showHistory() {
+      let show = true;
+      if (this.currentRouteName() === "History") {
+        show = false;
+      }
+      return show;
+    },
+  },
+  methods: {
+    currentRouteName() {
+      if (this.$route.name) {
+        return this.$route.name;
+      } else {
+        return null;
+      }
+    },
+    newUser() {
+      this.$emit("new-user");
+    },
+  },
 };
 </script>
 

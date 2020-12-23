@@ -1,87 +1,19 @@
 <template>
   <div class="row">
-    <router-link to="/exercise/Push" class="box">Push</router-link>
-    <router-link to="/exercise/Pull" class="box">Pull</router-link>
-    <router-link to="/exercise/Legs" class="box">Legs</router-link>
+    <router-link to="/exercise/push_ups" class="box">Push Ups</router-link>
+    <router-link to="/exercise/pull_ups" class="box">Pull Ups</router-link>
+    <router-link to="/exercise/squats" class="box">Squats</router-link>
   </div>
   <router-view />
 </template>
 
 <script>
-import firebase from "firebase/app";
-import "firebase/firestore";
+import { useStore } from "../store";
 
 export default {
   name: "Home",
-  components: {},
-  data() {
-    return {
-      sessions: {
-        0: { name: "Push", active: false },
-        1: { name: "Pull", active: false },
-        2: { name: "Legs", active: false },
-      },
-      appUser: null,
-      userData: null,
-      selectedIdx: -1,
-    };
-  },
-  methods: {
-    activateChild(idx) {
-      // find session
-      this.selectedIdx = idx;
-      var sesh = this.sessions[idx];
-
-      // change active value, and update array
-      sesh.active = true;
-      this.sessions[idx] = sesh;
-    },
-    reset() {
-      for (var idx in this.sessions) {
-        this.sessions[idx].active = false;
-      }
-      this.selectedIdx = -1;
-    },
-    popData(user) {
-      this.appUser = user;
-      this.getUserDoc(user.uid);
-    },
-    unPopData() {
-      this.appUser = null;
-      this.userData = null;
-    },
-    getUserDoc(uid) {
-      var that = this;
-      var db = firebase.firestore();
-      var docRef = db.collection("histories").doc(uid);
-      docRef
-        .get()
-        .then(function (doc) {
-          if (doc.exists) {
-            that.setUserData(doc.data());
-          } else {
-            console.log("No such document!");
-          }
-        })
-        .catch(function (error) {
-          console.log("Error getting document:", error);
-        });
-    },
-    setUserData(userDataLocal) {
-      this.userData = userDataLocal;
-    },
-    setUserDoc(valueObj) {
-      var db = firebase.firestore();
-      db.collection("histories")
-        .doc(this.authdUser.uid)
-        .set(valueObj)
-        .then(function () {
-          console.log("Document successfully written!");
-        })
-        .catch(function (error) {
-          console.error("Error writing document: ", error);
-        });
-    },
+  setup() {
+    return { store: useStore() };
   },
 };
 </script>

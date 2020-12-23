@@ -14,9 +14,10 @@
 </template>
 
 <script>
-import Set from "../components/Set.vue";
-import dataObj from "../data.js";
+import Set from "../components/Set";
+import { useStore } from "../store";
 /* var today = new Date().toJSON().slice(0,10); */
+
 export default {
   name: "ExerciseSession",
   components: {
@@ -28,13 +29,18 @@ export default {
       required: true,
     },
   },
+  setup() {
+    return { store: useStore() };
+  },
   data() {
     return {
-      dataObjLocal: dataObj,
-      todayData: {},
+      dataLocal: {},
+      todayData: { sets: [] },
     };
   },
   beforeMount() {
+    // TODO, clean up line below. NO JSON CLONING
+    this.dataLocal = JSON.parse(JSON.stringify(this.store.state.userData.days));
     this.runDataCalcs(this.localName);
   },
   emits: ["selectedState", "doneWorkout"],
@@ -42,35 +48,36 @@ export default {
     finished() {
       this.$emit("done-workout");
     },
-    runDataCalcs(seshName) {
-      const lastDayData = this.findLastDataPt(seshName);
-      const totalReps = this.getTotalRepsFromDay(lastDayData);
-      const todayReps = this.findSetReps(totalReps);
-      const todayData = this.prepData(lastDayData, todayReps);
-      this.todayData = todayData;
+    runDataCalcs() {
+      const lastDayData = this.findLastDataPt();
+      const lastDayReps = this.getTotalRepsFromDay(lastDayData);
+      const newRepsTuple = this.findSetReps(lastDayReps);
+      this.prepData(newRepsTuple);
     },
-    findLastDataPt(seshName) {
-      for (var key in this.dataObjLocal.days) {
-        var nextDayData = this.dataObjLocal.days[key];
+    findLastDataPt() {
+      for (var key in this.dataLocal) {
+        const nextDayData = this.dataLocal[key];
         const seshType = nextDayData.seshType;
-        if (seshType === seshName) {
+        if (seshType === this.localName) {
+          this.todayData = nextDayData;
           return nextDayData;
         }
       }
+
       return null;
     },
-    getTotalRepsFromDay(dayData) {
+    getTotalRepsFromDay(lastDayData) {
       var totalReps = 0;
-      if (dayData !== null) {
-        for (const idx in dayData.sets) {
-          const nextReps = dayData.sets[idx].reps;
+      if (lastDayData !== null) {
+        for (const idx in lastDayData.sets) {
+          const nextReps = lastDayData.sets[idx].reps;
           totalReps += nextReps;
         }
       }
       return totalReps;
     },
-    findSetReps(previousTotal) {
-      const goalTotal = previousTotal + 1;
+    findSetReps(lastDayReps) {
+      const goalTotal = lastDayReps + 1;
       const div = Math.floor(goalTotal / 3);
       let rem = goalTotal % 3;
 
@@ -83,12 +90,10 @@ export default {
 
       return tuple;
     },
-    prepData(lastDayData, todaySetTuple) {
-      const lastDaySets = lastDayData.sets;
-      lastDaySets[0].reps = todaySetTuple[0];
-      lastDaySets[1].reps = todaySetTuple[1];
-      lastDaySets[2].reps = todaySetTuple[2];
-      return lastDayData;
+    prepData(newRepsTuple) {
+      this.todayData.sets[0].reps = newRepsTuple[0];
+      this.todayData.sets[1].reps = newRepsTuple[1];
+      this.todayData.sets[2].reps = newRepsTuple[2];
     },
   },
 };

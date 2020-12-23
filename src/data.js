@@ -1,7 +1,7 @@
 const dataObj = {
 	days: {
 		push0: {
-			seshType: 'Push',
+			seshType: 'push_ups',
 			sets: [
 				{
 					exercise: 'Push Ups',
@@ -18,7 +18,7 @@ const dataObj = {
 			]
 		},
 		pull0: {
-			seshType: 'Pull',
+			seshType: 'pull_ups',
 			sets: [
 				{
 					exercise: 'Pull Ups',
@@ -35,7 +35,7 @@ const dataObj = {
 			]
 		},
 		legs0: {
-			seshType: 'Legs',
+			seshType: 'squats',
 			sets: [
 				{
 					exercise: 'Squats',

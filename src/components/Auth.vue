@@ -1,5 +1,5 @@
 <template>
-  <div v-if="authdUser === null" class="box" @click="performAuth">
+  <div v-if="store.state.user === null" class="box" @click="performAuth">
     Register / Login
   </div>
   <div v-else class="box" @click="logout">Log Out</div>
@@ -10,15 +10,18 @@
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
+import { useStore } from "../store";
 
 export default {
+  setup() {
+    return { store: useStore() };
+  },
+  emits: ['newUser'],
   data() {
     return {
-      authdUser: null,
       error: null,
     };
   },
-  emits: ["authIn", "authOut"],
   methods: {
     performAuth() {
       var that = this;
@@ -28,8 +31,8 @@ export default {
         .signInWithPopup(provider)
         .then((result) => {
           var user = result.user;
-          that.authdUser = user;
-          that.$emit("auth-in", user);
+          that.store.setUser(user);
+          that.$emit('new-user');
         })
         .catch((error) => {
           that.error = error.message;
@@ -41,12 +44,9 @@ export default {
         .auth()
         .signOut()
         .then(() => {
-          console.log("sign out worked");
-          that.authdUser = null;
-          that.$emit("auth-out");
+          that.store.setUser(null);
         })
         .catch((error) => {
-          console.log("error occured: " + error.message);
           that.error = error.message;
         });
     },
