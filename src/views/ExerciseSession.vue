@@ -18,6 +18,8 @@
 <script>
 import Set from "../components/Set";
 import { useStore } from "../store";
+import firebase from "firebase/app";
+import "firebase/firestore";
 
 export default {
   name: "ExerciseSession",
@@ -44,7 +46,6 @@ export default {
     this.dataLocal = this.store.getState().userData;
     this.runDataCalcs();
   },
-  emits: ["selectedState", "doneWorkout"],
   methods: {
     setDone(completedReps, setNum) {
       this.repsTuple[setNum - 1] = completedReps;
@@ -61,7 +62,24 @@ export default {
       const storeCopy = this.store.getState().userData;
       storeCopy.days[today] = this.todayData;
       this.store.setUserData(storeCopy);
-      this.$emit("done-workout");
+      this.updateFirebaseData();
+    },
+    updateFirebaseData() {
+      //TODO, write some error handling below
+      const uid = this.store.getState().user.uid;
+      console.log('uid', uid);
+      const objToWrite = this.store.getState().userData;
+      console.log('obj', objToWrite);
+      var db = firebase.firestore();
+      db.collection("histories")
+        .doc(uid)
+        .set(objToWrite)
+        .then(function () {
+          console.log("Document successfully written!");
+        })
+        .catch(function (error) {
+          console.error("Error writing document: ", error);
+        });
     },
     runDataCalcs() {
       const lastDayData = this.findLastDataPt();

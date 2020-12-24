@@ -52,7 +52,7 @@ export default {
           set2reps: set2reps,
           set3reps: set3reps,
         };
-        this.uiHist.unshift(objToAdd);
+        this.uiHist.push(objToAdd);
       });
     },
   },

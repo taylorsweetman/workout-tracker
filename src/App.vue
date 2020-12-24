@@ -5,23 +5,27 @@
 
 <script>
 import NavBar from "./components/NavBar";
+import { useStore } from "./store";
 import firebase from "firebase/app";
 import "firebase/firestore";
-import { useStore } from "./store";
 
 export default {
   name: "App",
-   setup() {
+  setup() {
     return { store: useStore() };
   },
   components: {
     NavBar,
   },
   methods: {
+    //TODO, extract the db variable
     addUserDataToStore() {
       var that = this;
       var db = firebase.firestore();
-      var docRef = db.collection("histories").doc(this.store.getState().user.uid);
+      const uid = that.store.getState().user.uid;
+      var docRef = db
+        .collection("histories")
+        .doc(uid);
       docRef
         .get()
         .then(function (doc) {
@@ -34,8 +38,8 @@ export default {
         .catch(function (error) {
           console.log("Error getting document:", error);
         });
-    }
-  }
+    },
+  },
 };
 </script>
 

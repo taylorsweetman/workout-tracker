@@ -1,7 +1,9 @@
 <template>
   <div class="topnav">
     <h1>Taylor's Workout App</h1>
-    <router-link v-show="showHome" to="/home" class="box">Home</router-link>
+    <router-link v-show="showHome" to="/home" class="box"
+      >Home</router-link
+    >
     <router-link v-show="showHistory" to="/history" class="box"
       >History</router-link
     >
