@@ -37,7 +37,26 @@ export default {
   },
   methods: {
     buildUIHist() {
-      const userData = this.store.getState().userData;
+      var userData = this.store.getState().userData;
+
+      function comp(a, b) {
+        return a - b;
+      } 
+
+      const sortedData = { days: [] };
+
+      var patt = new RegExp("^[0-9]");
+
+      Object.keys(userData.days)
+        .sort(comp)
+        .forEach((dateIdx) => {
+          if (patt.test(dateIdx)) {
+            sortedData.days[dateIdx] = userData.days[dateIdx];
+          }
+        });
+
+      userData = sortedData;
+
       Object.keys(userData.days).forEach((dateIdx) => {
         const date = dateIdx;
         const sets = userData.days[date].sets;
