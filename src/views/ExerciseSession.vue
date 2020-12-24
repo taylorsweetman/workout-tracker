@@ -41,7 +41,7 @@ export default {
     };
   },
   beforeMount() {
-    this.dataLocal = this.store.getState().userData.days;
+    this.dataLocal = this.store.getState().userData;
     this.runDataCalcs();
   },
   emits: ["selectedState", "doneWorkout"],
@@ -56,8 +56,11 @@ export default {
       for (var i = 0; i < 3; i++) {
         this.todayData.sets[i].reps = this.repsTuple[i];
       }
+
       var today = new Date().toJSON().slice(0, 10);
-      this.dataLocal[today] = this.todayData;
+      const storeCopy = this.store.getState().userData;
+      storeCopy.days[today] = this.todayData;
+      this.store.setUserData(storeCopy);
       this.$emit("done-workout");
     },
     runDataCalcs() {
@@ -67,8 +70,8 @@ export default {
       this.prepData(newRepsTuple);
     },
     findLastDataPt() {
-      for (var key in this.dataLocal) {
-        const nextDayData = this.dataLocal[key];
+      for (var key in this.dataLocal.days) {
+        const nextDayData = this.dataLocal.days[key];
         const seshType = nextDayData.seshType;
         if (seshType === this.localName) {
           this.todayData = nextDayData;

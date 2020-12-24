@@ -1,5 +1,6 @@
 <template>
   <nav-bar @new-user="addUserDataToStore"></nav-bar>
+  <p><strong>STORE DATA: </strong>{{ store.getState().userData }}</p>
 </template>
 
 <script>

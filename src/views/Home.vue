@@ -3,19 +3,16 @@
     <router-link to="/exercise/push_ups" class="box">Push Ups</router-link>
     <router-link to="/exercise/pull_ups" class="box">Pull Ups</router-link>
     <router-link to="/exercise/squats" class="box">Squats</router-link>
-    <p>{{ store.getState().userData }}</p>
   </div>
   <router-view />
 </template>
 
 <script>
-import { useStore } from "../store";
+
 
 export default {
   name: "Home",
-  setup() {
-    return { store: useStore() };
-  },
+  
 };
 </script>
 

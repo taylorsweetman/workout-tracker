@@ -9,10 +9,12 @@ export const createStore = () => {
         userData: null
 	});
 	const setUser = function(newUser) {
-		state.user = newUser;
+		const newData = cloneDeep(newUser);
+		state.user = newData;
     };
     const setUserData = function(newUserData) {
-		state.userData = newUserData;
+		const newData = cloneDeep(newUserData);
+		state.userData = newData;
 	};
 	const getState = () => {
 		return cloneDeep(state);
