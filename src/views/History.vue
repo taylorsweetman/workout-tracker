@@ -8,12 +8,12 @@
       <div class="div-table-col">Set 2 Reps</div>
       <div class="div-table-col">Set 3 Reps</div>
     </div>
-    <div class="div-table-row" v-for="day in uiHist" :key="day.date">
-      <div class="div-table-col">{{ day.date }}</div>
-      <div class="div-table-col">{{ day.exercise }}</div>
-      <div class="div-table-col">{{ day.set1reps }}</div>
-      <div class="div-table-col">{{ day.set2reps }}</div>
-      <div class="div-table-col">{{ day.set3reps }}</div>
+    <div class="div-table-row" v-for="session in uiHist" :key="session.date">
+      <div class="div-table-col">{{ session.date }}</div>
+      <div class="div-table-col">{{ session.seshType }}</div>
+      <div class="div-table-col">{{ session.sets[0] }}</div>
+      <div class="div-table-col">{{ session.sets[1] }}</div>
+      <div class="div-table-col">{{ session.sets[2] }}</div>
     </div>
   </div>
 </template>
@@ -28,7 +28,6 @@ export default {
   },
   data() {
     return {
-      display: false,
       uiHist: [],
     };
   },
@@ -38,41 +37,26 @@ export default {
   methods: {
     buildUIHist() {
       var userData = this.store.getState().userData;
+      //var pattern = new RegExp("^[0-9]");
 
-      function comp(a, b) {
-        return a - b;
-      } 
-
-      const sortedData = { days: [] };
-
-      var patt = new RegExp("^[0-9]");
-
-      Object.keys(userData.days)
-        .sort(comp)
-        .forEach((dateIdx) => {
-          if (patt.test(dateIdx)) {
-            sortedData.days[dateIdx] = userData.days[dateIdx];
-          }
-        });
-
-      userData = sortedData;
-
-      Object.keys(userData.days).forEach((dateIdx) => {
-        const date = dateIdx;
-        const sets = userData.days[date].sets;
-        const exercise = sets[0].exercise;
-        const set1reps = sets[0].reps;
-        const set2reps = sets[1].reps;
-        const set3reps = sets[2].reps;
-        var objToAdd = {
+      for (const idx in userData.days) {
+        const session = userData.days[idx];
+        console.log('session', session);
+        const date = session.date;
+        console.log('date', date);
+        // if (pattern.test(date)) {
+        const exercise = session.seshType;
+        const set1reps = session.sets[0];
+        const set2reps = session.sets[1];
+        const set3reps = session.sets[2];
+        const objToAdd = {
           date: date,
-          exercise: exercise,
-          set1reps: set1reps,
-          set2reps: set2reps,
-          set3reps: set3reps,
+          seshType: exercise,
+          sets: [set1reps, set2reps, set3reps],
         };
-        this.uiHist.push(objToAdd);
-      });
+        this.uiHist.unshift(objToAdd);
+        //}
+      }
     },
   },
 };

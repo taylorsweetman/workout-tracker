@@ -37,13 +37,11 @@ export default {
   },
   data() {
     return {
-      dataLocal: {},
       todayData: {},
       repsTuple: [0, 0, 0],
     };
   },
   beforeMount() {
-    this.dataLocal = this.store.getState().userData;
     this.runDataCalcs();
   },
   methods: {
@@ -63,13 +61,14 @@ export default {
       storeCopy.days[today] = this.todayData;
       this.store.setUserData(storeCopy);
       this.updateFirebaseData();
+      console.log("about to route with router:", this.$router);
+      this.$router.push("/history");
+      //this.$router.go("/history");
     },
     updateFirebaseData() {
       //TODO, write some error handling below
       const uid = this.store.getState().user.uid;
-      console.log('uid', uid);
       const objToWrite = this.store.getState().userData;
-      console.log('obj', objToWrite);
       var db = firebase.firestore();
       db.collection("histories")
         .doc(uid)
@@ -88,16 +87,26 @@ export default {
       this.prepData(newRepsTuple);
     },
     findLastDataPt() {
-      for (var key in this.dataLocal.days) {
-        const nextDayData = this.dataLocal.days[key];
+      var mostRecentDate = "1990-03-18";
+      var mostRecentSesh = null;
+      
+      for (var key in this.store.getState().userData.days) {
+        const nextDayData = this.store.getState().userData.days[key];
         const seshType = nextDayData.seshType;
+
         if (seshType === this.localName) {
-          this.todayData = nextDayData;
-          return nextDayData;
+          if (key > mostRecentDate) {
+            mostRecentDate = key;
+            mostRecentSesh = nextDayData;
+          }
         }
       }
 
-      return null;
+      if (mostRecentSesh !== null) {
+        return mostRecentSesh;
+      } else {
+        return null;
+      }
     },
     getTotalRepsFromDay(lastDayData) {
       var totalReps = 0;

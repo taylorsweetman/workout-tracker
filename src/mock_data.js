@@ -1,57 +1,21 @@
 const dataObj = {
-	days: {
-		push0: {
+	days: [
+		{
+			date: 'push_ups0',
 			seshType: 'push_ups',
-			sets: [
-				{
-					exercise: 'Push Ups',
-					reps: 10
-				},
-				{
-					exercise: 'Push Ups',
-					reps: 10
-				},
-				{
-					exercise: 'Push Ups',
-					reps: 9
-				}
-			]
+			sets: [10, 10, 9]
 		},
-		pull0: {
+		{
+			date: 'pull_ups0',
 			seshType: 'pull_ups',
-			sets: [
-				{
-					exercise: 'Pull Ups',
-					reps: 4
-				},
-				{
-					exercise: 'Pull Ups',
-					reps: 3
-				},
-				{
-					exercise: 'Pull Ups',
-					reps: 3
-				}
-			]
+			sets: [4, 3, 3]
 		},
-		legs0: {
+		{
+			date: 'squats0',
 			seshType: 'squats',
-			sets: [
-				{
-					exercise: 'Squats',
-					reps: 10
-				},
-				{
-					exercise: 'Squats',
-					reps: 10
-				},
-				{
-					exercise: 'Squats',
-					reps: 9
-				}
-			]
+			sets: [10, 10, 9]
 		}
-	}
+	]
 };
 
 export default dataObj;

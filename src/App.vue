@@ -1,5 +1,6 @@
 <template>
   <nav-bar @new-user="addUserDataToStore"></nav-bar>
+  <write-firebase></write-firebase>
   <p><strong>STORE DATA: </strong>{{ store.getState().userData }}</p>
 </template>
 
@@ -8,6 +9,7 @@ import NavBar from "./components/NavBar";
 import { useStore } from "./store";
 import firebase from "firebase/app";
 import "firebase/firestore";
+import WriteFirebase from "./utils/WriteFirebase";
 
 export default {
   name: "App",
@@ -16,6 +18,7 @@ export default {
   },
   components: {
     NavBar,
+    WriteFirebase,
   },
   methods: {
     //TODO, extract the db variable
@@ -23,9 +26,7 @@ export default {
       var that = this;
       var db = firebase.firestore();
       const uid = that.store.getState().user.uid;
-      var docRef = db
-        .collection("histories")
-        .doc(uid);
+      var docRef = db.collection("histories").doc(uid);
       docRef
         .get()
         .then(function (doc) {

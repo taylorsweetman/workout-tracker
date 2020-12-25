@@ -1,9 +1,7 @@
 <template>
   <div class="topnav">
     <h1>Taylor's Workout App</h1>
-    <router-link v-show="showHome" to="/home" class="box"
-      >Home</router-link
-    >
+    <router-link v-show="showHome" to="/home" class="box">Home</router-link>
     <router-link v-show="showHistory" to="/history" class="box"
       >History</router-link
     >
@@ -14,11 +12,15 @@
 
 <script>
 import Auth from "./Auth";
+import { useStore } from "../store";
 
 export default {
   name: "NavBar",
   components: { Auth },
   emits: ["newUser"],
+  setup() {
+    return { store: useStore() };
+  },
   computed: {
     showHome() {
       let show = true;
@@ -32,7 +34,10 @@ export default {
     },
     showHistory() {
       let show = true;
-      if (this.currentRouteName() === "History") {
+      if (
+        this.currentRouteName() === "History" ||
+        this.store.getState().userData === null
+      ) {
         show = false;
       }
       return show;
