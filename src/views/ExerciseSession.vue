@@ -4,9 +4,9 @@
       <Set
         v-for="(set, idx) in todayData.sets"
         :key="idx"
-        :exercise-name="set.exercise"
+        :exercise-name="todayData.exercise"
         :setNum="idx + 1"
-        :reps="set.reps"
+        :reps="set"
         @set-done="setDone"
         @set-undone="setUndone"
       />
@@ -37,7 +37,7 @@ export default {
   },
   data() {
     return {
-      todayData: {},
+      todayData: { sets: [] },
       repsTuple: [0, 0, 0],
     };
   },
@@ -53,17 +53,14 @@ export default {
     },
     finished() {
       for (var i = 0; i < 3; i++) {
-        this.todayData.sets[i].reps = this.repsTuple[i];
+        this.todayData.sets[i] = this.repsTuple[i];
       }
 
-      var today = new Date().toJSON().slice(0, 10);
       const storeCopy = this.store.getState().userData;
-      storeCopy.days[today] = this.todayData;
+      storeCopy.days.push(this.todayData);
       this.store.setUserData(storeCopy);
       this.updateFirebaseData();
-      console.log("about to route with router:", this.$router);
       this.$router.push("/history");
-      //this.$router.go("/history");
     },
     updateFirebaseData() {
       //TODO, write some error handling below
@@ -87,32 +84,24 @@ export default {
       this.prepData(newRepsTuple);
     },
     findLastDataPt() {
-      var mostRecentDate = "1990-03-18";
-      var mostRecentSesh = null;
-      
-      for (var key in this.store.getState().userData.days) {
-        const nextDayData = this.store.getState().userData.days[key];
-        const seshType = nextDayData.seshType;
+      var daysArr = this.store.getState().userData.days;
 
-        if (seshType === this.localName) {
-          if (key > mostRecentDate) {
-            mostRecentDate = key;
-            mostRecentSesh = nextDayData;
-          }
+      for (var i = daysArr.length - 1; i >= 0; i--) {
+        const nextDayData = daysArr[i];
+        const exercise = nextDayData.exercise;
+
+        if (exercise === this.localName) {
+          return nextDayData;
         }
       }
 
-      if (mostRecentSesh !== null) {
-        return mostRecentSesh;
-      } else {
-        return null;
-      }
+      return null;
     },
     getTotalRepsFromDay(lastDayData) {
       var totalReps = 0;
       if (lastDayData !== null) {
         for (const idx in lastDayData.sets) {
-          const nextReps = lastDayData.sets[idx].reps;
+          const nextReps = lastDayData.sets[idx];
           totalReps += nextReps;
         }
       }
@@ -133,11 +122,13 @@ export default {
       return tuple;
     },
     prepData(newRepsTuple) {
-      this.todayData.sets[0].reps = newRepsTuple[0];
-      this.todayData.sets[1].reps = newRepsTuple[1];
-      this.todayData.sets[2].reps = newRepsTuple[2];
+      this.todayData.sets[0] = newRepsTuple[0];
+      this.todayData.sets[1] = newRepsTuple[1];
+      this.todayData.sets[2] = newRepsTuple[2];
 
-      this.todayData.seshType = this.localName;
+      var today = new Date().toJSON().slice(0, 10);
+      this.todayData.date = today;
+      this.todayData.exercise = this.localName;
     },
   },
 };

@@ -1,7 +1,7 @@
 <template>
   <nav-bar @new-user="addUserDataToStore"></nav-bar>
-  <write-firebase></write-firebase>
-  <p><strong>STORE DATA: </strong>{{ store.getState().userData }}</p>
+  <!-- <write-firebase></write-firebase>
+  <p><strong>STORE DATA: </strong>{{ store.getState().userData }}</p> -->
 </template>
 
 <script>
@@ -9,7 +9,7 @@ import NavBar from "./components/NavBar";
 import { useStore } from "./store";
 import firebase from "firebase/app";
 import "firebase/firestore";
-import WriteFirebase from "./utils/WriteFirebase";
+//import WriteFirebase from "./utils/WriteFirebase";
 
 export default {
   name: "App",
@@ -18,10 +18,9 @@ export default {
   },
   components: {
     NavBar,
-    WriteFirebase,
+    //WriteFirebase,
   },
   methods: {
-    //TODO, extract the db variable
     addUserDataToStore() {
       var that = this;
       var db = firebase.firestore();
