@@ -26,6 +26,7 @@
 
 <script>
 import { useStore } from "../store";
+import { beautifyStr } from "../utils/StringUtils";
 
 export default {
   name: "History",
@@ -35,6 +36,7 @@ export default {
   data() {
     return {
       uiHist: [],
+      beautifyStr: beautifyStr,
     };
   },
   beforeMount() {
@@ -55,7 +57,7 @@ export default {
           const set3reps = session.sets[2];
           const objToAdd = {
             date: date,
-            exercise: exercise,
+            exercise: beautifyStr(exercise),
             sets: [set1reps, set2reps, set3reps],
           };
           this.uiHist.unshift(objToAdd);

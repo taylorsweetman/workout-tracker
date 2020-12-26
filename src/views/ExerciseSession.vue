@@ -4,7 +4,7 @@
       <Set
         v-for="(set, idx) in todayData.sets"
         :key="idx"
-        :exercise-name="todayData.exercise"
+        :exercise-name="beautifyStr(todayData.exercise)"
         :setNum="idx + 1"
         :reps="set"
         @set-done="setDone"
@@ -18,6 +18,7 @@
 <script>
 import Set from "../components/Set";
 import { useStore } from "../store";
+import { beautifyStr } from "../utils/StringUtils";
 import firebase from "firebase/app";
 import "firebase/firestore";
 
@@ -39,44 +40,13 @@ export default {
     return {
       todayData: { sets: [] },
       repsTuple: [0, 0, 0],
+      beautifyStr: beautifyStr,
     };
   },
   beforeMount() {
     this.runDataCalcs();
   },
   methods: {
-    setDone(completedReps, setNum) {
-      this.repsTuple[setNum - 1] = completedReps;
-    },
-    setUndone(setNum) {
-      this.repsTuple[setNum - 1] = 0;
-    },
-    finished() {
-      for (var i = 0; i < 3; i++) {
-        this.todayData.sets[i] = this.repsTuple[i];
-      }
-
-      const storeCopy = this.store.getState().userData;
-      storeCopy.days.push(this.todayData);
-      this.store.setUserData(storeCopy);
-      this.updateFirebaseData();
-      this.$router.push("/history");
-    },
-    updateFirebaseData() {
-      //TODO, write some error handling below
-      const uid = this.store.getState().user.uid;
-      const objToWrite = this.store.getState().userData;
-      var db = firebase.firestore();
-      db.collection("histories")
-        .doc(uid)
-        .set(objToWrite)
-        .then(function () {
-          console.log("Document successfully written!");
-        })
-        .catch(function (error) {
-          console.error("Error writing document: ", error);
-        });
-    },
     runDataCalcs() {
       const lastDayData = this.findLastDataPt();
       const lastDayReps = this.getTotalRepsFromDay(lastDayData);
@@ -129,6 +99,38 @@ export default {
       var today = new Date().toJSON().slice(0, 10);
       this.todayData.date = today;
       this.todayData.exercise = this.localName;
+    },
+    setDone(completedReps, setNum) {
+      this.repsTuple[setNum - 1] = completedReps;
+    },
+    setUndone(setNum) {
+      this.repsTuple[setNum - 1] = 0;
+    },
+    finished() {
+      for (var i = 0; i < 3; i++) {
+        this.todayData.sets[i] = this.repsTuple[i];
+      }
+
+      const storeCopy = this.store.getState().userData;
+      storeCopy.days.push(this.todayData);
+      this.store.setUserData(storeCopy);
+      this.updateFirebaseData();
+      this.$router.push("/history");
+    },
+    updateFirebaseData() {
+      //TODO, write some error handling below
+      const uid = this.store.getState().user.uid;
+      const objToWrite = this.store.getState().userData;
+      var db = firebase.firestore();
+      db.collection("histories")
+        .doc(uid)
+        .set(objToWrite)
+        .then(function () {
+          console.log("Document successfully written!");
+        })
+        .catch(function (error) {
+          console.error("Error writing document: ", error);
+        });
     },
   },
 };

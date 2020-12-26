@@ -45,6 +45,7 @@ export default {
         .signOut()
         .then(() => {
           that.store.setUser(null);
+          that.store.setUserData(null);
         })
         .catch((error) => {
           that.error = error.message;
