@@ -1,87 +1,67 @@
 <template>
-  <div><h1>Taylor's Workout App</h1></div>
-  <div class="row">
-    <div v-if="selectedIdx !== -1">
-      <exercise-session
-        :active="true"
-        :name="sessions[selectedIdx].name"
-      ></exercise-session>
-    </div>
-    <div v-else>
-      <exercise-session
-        v-for="(session, idx) in sessions"
-        :key="idx"
-        :active="session.active"
-        :name="session.name"
-        @selected-state="activateChild(idx)"
-      />
-    </div>
-  </div>
-  <div class="row" v-if="selectedIdx !== -1">
-    <button class="box" @click="reset">Back</button>
-  </div>
-  <div class="row"><History class="box" /></div>
+  <nav-bar @new-user="addUserDataToStore"></nav-bar>
+  <!-- <write-firebase></write-firebase>
+  <p><strong>STORE DATA: </strong>{{ store.getState().userData }}</p> -->
 </template>
 
 <script>
-import ExerciseSession from "./components/ExerciseSession.vue";
-import History from "./components/History.vue";
+import NavBar from "./components/NavBar";
+import { useStore } from "./store";
+import firebase from "firebase/app";
+import "firebase/firestore";
+//import WriteFirebase from "./utils/WriteFirebase";
 
 export default {
   name: "App",
-  components: {
-    ExerciseSession,
-    History,
+  setup() {
+    return { store: useStore() };
   },
-  data() {
-    return {
-      sessions: {
-        0: { name: "Pull", active: false },
-        1: { name: "Push", active: false },
-        2: { name: "Legs", active: false },
-      },
-      selectedIdx: -1,
-    };
+  components: {
+    NavBar,
+    //WriteFirebase,
   },
   methods: {
-    activateChild(idx) {
-      this.selectedIdx = idx;
-      var val = this.sessions[idx];
-      val.active = true;
-      this.sessions[idx] = val;
-    },
-    reset() {
-      for (var idx in this.sessions) {
-        this.sessions[idx].active = false;
-      }
-      this.selectedIdx = -1;
+    addUserDataToStore() {
+      var that = this;
+      var db = firebase.firestore();
+      const uid = that.store.getState().user.uid;
+      var docRef = db.collection("histories").doc(uid);
+      docRef
+        .get()
+        .then(function (doc) {
+          if (doc.exists) {
+            that.store.setUserData(doc.data());
+          } else {
+            console.log("No such document!");
+          }
+        })
+        .catch(function (error) {
+          console.log("Error getting document:", error);
+        });
     },
   },
 };
 </script>
 
 <style>
-h1 {
-  color: #222831;
-}
-.box {
-  display: inline-block;
-  margin: 1%;
-
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
-  margin: 1rem;
-  border-radius: 10px;
-  padding: 1rem;
-  background-color: #f05454;
-  color: white;
-  text-align: center;
-}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
-  background-color: #e8e8e8;
+}
+
+#nav {
+  padding: 30px;
+}
+
+#nav a {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+#nav a.router-link-exact-active {
+  color: #42b983;
 }
 </style>

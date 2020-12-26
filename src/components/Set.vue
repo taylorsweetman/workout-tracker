@@ -1,7 +1,7 @@
 <template>
   <button @click="toggleDone" :class="finished ? 'finished' : ''">
     <h1>{{ exerciseName }}</h1>
-    <h1>Reps: {{ reps }} </h1>
+    <h1>Reps: {{ reps }}</h1>
   </button>
 </template>
 
@@ -13,20 +13,25 @@ export default {
     setNum: Number,
     reps: Number,
   },
+  emits: ["setDone", "setUndone"],
   data() {
     return {
-      finished: false
-    }
+      finished: false,
+    };
   },
   methods: {
     toggleDone() {
       this.finished = !this.finished;
-    }
-  }
+      if (this.finished) {
+        this.$emit("set-done", this.reps, this.setNum);
+      } else {
+        this.$emit("set-undone", this.setNum);
+      }
+    },
+  },
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 button {
   display: inline-block;
