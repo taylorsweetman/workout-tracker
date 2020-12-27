@@ -5,9 +5,9 @@
       <div class="div-table-row-head">
         <div class="div-table-col">Date</div>
         <div class="div-table-col">Exercise</div>
-        <div class="div-table-col">Set 1 Reps</div>
-        <div class="div-table-col">Set 2 Reps</div>
-        <div class="div-table-col">Set 3 Reps</div>
+        <div class="div-table-col">Set 1</div>
+        <div class="div-table-col">Set 2</div>
+        <div class="div-table-col">Set 3</div>
       </div>
 
       <div class="div-table-row" v-for="session in uiHist" :key="session.date">
@@ -47,8 +47,7 @@ export default {
       var userData = this.store.getState().userData;
       var pattern = new RegExp("^[0-9]{4}-[0-9]{2}-[0-9]{2}");
 
-      for (const idx in userData.days) {
-        const session = userData.days[idx];
+      for (const session of userData.days) {
         const date = session.date;
         if (pattern.test(date)) {
           const exercise = session.exercise;

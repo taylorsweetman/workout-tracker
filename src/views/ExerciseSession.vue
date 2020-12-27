@@ -55,6 +55,9 @@ export default {
     },
     findLastDataPt() {
       var daysArr = this.store.getState().userData.days;
+      if (!daysArr) {
+        return null;
+      }
 
       for (var i = daysArr.length - 1; i >= 0; i--) {
         const nextDayData = daysArr[i];
@@ -69,9 +72,8 @@ export default {
     },
     getTotalRepsFromDay(lastDayData) {
       var totalReps = 0;
-      if (lastDayData !== null) {
-        for (const idx in lastDayData.sets) {
-          const nextReps = lastDayData.sets[idx];
+      if (lastDayData) {
+        for (const nextReps of lastDayData.sets) {
           totalReps += nextReps;
         }
       }
@@ -106,11 +108,13 @@ export default {
     setUndone(setNum) {
       this.repsTuple[setNum - 1] = 0;
     },
-    finished() {
+    prepTodaySets() {
       for (var i = 0; i < 3; i++) {
         this.todayData.sets[i] = this.repsTuple[i];
       }
-
+    },
+    finished() {
+      this.prepTodaySets();
       const storeCopy = this.store.getState().userData;
       storeCopy.days.push(this.todayData);
       this.store.setUserData(storeCopy);
@@ -121,6 +125,10 @@ export default {
       //TODO, write some error handling below
       const uid = this.store.getState().user.uid;
       const objToWrite = this.store.getState().userData;
+      if (!uid || !objToWrite) {
+        console.error("Can't update Firebase.", uid, objToWrite);
+        return;
+      }
       var db = firebase.firestore();
       db.collection("histories")
         .doc(uid)
