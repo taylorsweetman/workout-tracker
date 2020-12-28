@@ -1,17 +1,19 @@
 <template>
   <section>
-    <div class="row">
-      <Set
-        v-for="(set, idx) in todayData.sets"
-        :key="idx"
-        :exercise-name="beautifyStr(todayData.exercise)"
-        :setNum="idx + 1"
-        :reps="set"
-        @set-done="setDone"
-        @set-undone="setUndone"
-      />
-    </div>
-    <button @click="finished">Done!</button>
+    <Set
+      v-for="(set, idx) in todayData.sets"
+      :key="idx"
+      :exercise-name="beautifyStr(todayData.exercise)"
+      :setNum="idx + 1"
+      :promptReps="set"
+      @set-done="setDone"
+      @set-undone="setUndone"
+    />
+    <br />
+    <br />
+    <button @click="finished">
+      <h1>Done!</h1>
+    </button>
   </section>
 </template>
 
@@ -122,7 +124,6 @@ export default {
       this.$router.push("/history");
     },
     updateFirebaseData() {
-      //TODO, write some error handling below
       const uid = this.store.getState().user.uid;
       const objToWrite = this.store.getState().userData;
       if (!uid || !objToWrite) {
@@ -145,12 +146,12 @@ export default {
 </script>
 
 <style scoped>
-.box {
-  display: inline-block;
+button {
   margin: 1%;
 
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
   margin: 1rem;
+  margin-bottom: 0%;
   border-radius: 10px;
   padding: 1rem;
   background-color: #f05454;
