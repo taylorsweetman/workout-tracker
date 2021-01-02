@@ -1,5 +1,6 @@
 <template>
   <section>
+    <h1>Total Reps Completed: {{ totalReps }}</h1>
     <Set
       v-for="(set, idx) in todayData.sets"
       :key="idx"
@@ -47,6 +48,15 @@ export default {
   },
   beforeMount() {
     this.runDataCalcs();
+  },
+  computed: {
+    totalReps() {
+      let total = 0;
+      for (let reps of this.repsTuple) {
+        total += reps;
+      }
+      return total;
+    },
   },
   methods: {
     runDataCalcs() {
@@ -159,8 +169,12 @@ button {
   text-align: center;
 }
 h1 {
+  color: black;
+}
+button h1 {
   color: white;
 }
+
 h3 {
   margin: 40px 0 0;
 }

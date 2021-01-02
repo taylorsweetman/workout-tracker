@@ -27,19 +27,24 @@ export default {
     };
   },
   methods: {
+    emitRepChange() {
+      this.$emit("set-done", this.doneReps, this.setNum);
+    },
     toggleDone() {
       this.finished = !this.finished;
       if (this.finished) {
-        this.$emit("set-done", this.doneReps, this.setNum);
+        this.emitRepChange();
       } else {
         this.$emit("set-undone", this.setNum);
       }
     },
     repUp() {
       this.doneReps++;
+      if (this.finished) this.emitRepChange();
     },
     repDown() {
       if (this.doneReps > 0) this.doneReps--;
+      if (this.finished) this.emitRepChange();
     },
   },
 };
