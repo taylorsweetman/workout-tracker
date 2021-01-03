@@ -1,8 +1,20 @@
 <template>
   <div class="row" v-show="store.getState().userData !== null">
-    <router-link to="/exercise/push_ups" class="box">Push Ups</router-link>
-    <router-link to="/exercise/pull_ups" class="box">Pull Ups</router-link>
-    <router-link to="/exercise/squats" class="box">Squats</router-link>
+    <router-link
+      :to="{ name: 'ExerciseSession', params: { localName: exerciseTuple[0] } }"
+      class="box"
+      >{{ exerciseTuple[0] }}</router-link
+    >
+    <router-link
+      :to="{ name: 'ExerciseSession', params: { localName: exerciseTuple[1] } }"
+      class="box"
+      >{{ exerciseTuple[1] }}</router-link
+    >
+    <router-link
+      :to="{ name: 'ExerciseSession', params: { localName: exerciseTuple[2] } }"
+      class="box"
+      >{{ exerciseTuple[2] }}</router-link
+    >
   </div>
   <router-view />
 </template>
@@ -14,6 +26,11 @@ export default {
   name: "Home",
   setup() {
     return { store: useStore() };
+  },
+  data() {
+    return {
+      exerciseTuple: ["push_ups", "pull_ups", "squats"],
+    };
   },
 };
 </script>
