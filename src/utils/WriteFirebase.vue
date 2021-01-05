@@ -1,5 +1,7 @@
 <template>
-  <button @click="writeData">write mock data</button>
+  <button @click="writeData">
+    write mock data
+  </button>
 </template>
 
 <script>

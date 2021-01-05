@@ -5,13 +5,13 @@
       v-for="(set, idx) in todayData.sets"
       :key="idx"
       :exercise-name="beautifyStr(todayData.exercise)"
-      :setNum="idx + 1"
-      :promptReps="set"
+      :set-num="idx + 1"
+      :prompt-reps="set"
       @set-done="setDone"
       @set-undone="setUndone"
     />
-    <br />
-    <br />
+    <br>
+    <br>
     <button @click="finished">
       <h1>Done!</h1>
     </button>

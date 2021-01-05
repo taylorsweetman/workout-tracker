@@ -1,21 +1,45 @@
 <template>
-  <br /><br />
+  <br><br>
   <div v-if="uiHist.length > 0">
     <div class="div-table">
       <div class="div-table-row-head">
-        <div class="div-table-col">Date</div>
-        <div class="div-table-col">Exercise</div>
-        <div class="div-table-col">Set 1</div>
-        <div class="div-table-col">Set 2</div>
-        <div class="div-table-col">Set 3</div>
+        <div class="div-table-col">
+          Date
+        </div>
+        <div class="div-table-col">
+          Exercise
+        </div>
+        <div class="div-table-col">
+          Set 1
+        </div>
+        <div class="div-table-col">
+          Set 2
+        </div>
+        <div class="div-table-col">
+          Set 3
+        </div>
       </div>
 
-      <div class="div-table-row" v-for="session in uiHist" :key="session.date">
-        <div class="div-table-col">{{ session.date }}</div>
-        <div class="div-table-col">{{ session.exercise }}</div>
-        <div class="div-table-col">{{ session.sets[0] }}</div>
-        <div class="div-table-col">{{ session.sets[1] }}</div>
-        <div class="div-table-col">{{ session.sets[2] }}</div>
+      <div
+        class="div-table-row"
+        v-for="session in uiHist"
+        :key="session.date"
+      >
+        <div class="div-table-col">
+          {{ session.date }}
+        </div>
+        <div class="div-table-col">
+          {{ session.exercise }}
+        </div>
+        <div class="div-table-col">
+          {{ session.sets[0] }}
+        </div>
+        <div class="div-table-col">
+          {{ session.sets[1] }}
+        </div>
+        <div class="div-table-col">
+          {{ session.sets[2] }}
+        </div>
       </div>
     </div>
   </div>

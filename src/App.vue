@@ -1,5 +1,5 @@
 <template>
-  <nav-bar @new-user="addUserDataToStore"></nav-bar>
+  <nav-bar @new-user="addUserDataToStore" />
   <!-- <write-firebase></write-firebase>
   <p><strong>STORE DATA: </strong>{{ store.getState().userData }}</p> -->
 </template>

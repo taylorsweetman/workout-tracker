@@ -1,6 +1,6 @@
 import { createApp } from 'vue';
 import { storeSymbol, createStore } from './store';
-import App from './App';
+import App from './App.vue';
 import firebase from 'firebase/app';
 import router from './router';
 
