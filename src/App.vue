@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import NavBar from "./components/NavBar";
+import NavBar from "./components/NavBar.vue";
 import { useStore } from "./store";
 import firebase from "firebase/app";
 import "firebase/firestore";

@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import Set from "../components/Set";
+import Set from "../components/Set.vue";
 import { useStore } from "../store";
 import { beautifyStr } from "../utils/StringUtils";
 import firebase from "firebase/app";

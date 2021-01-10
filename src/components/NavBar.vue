@@ -1,30 +1,19 @@
 <template>
-  <div class="topnav">
-    <h1>Taylor's Workout App</h1>
-    <router-link
-      v-show="showHome"
-      to="/home"
-      class="box"
-    >
-      Home
-    </router-link>
-    <router-link
-      v-show="showHistory"
-      to="/history"
-      class="box"
-    >
-      History
-    </router-link>
-    <auth
-      class="box"
-      @new-user="newUser"
-    />
+  <div>
+    <div class="topnav">
+      <h1>Taylor's Workout App</h1>
+      <router-link v-show="showHome" to="/home" class="box"> Home </router-link>
+      <router-link v-show="showHistory" to="/history" class="box">
+        History
+      </router-link>
+      <auth class="box" @new-user="newUser" />
+    </div>
+    <router-view />
   </div>
-  <router-view />
 </template>
 
 <script>
-import Auth from "./Auth";
+import Auth from "./Auth.vue";
 import { useStore } from "../store";
 
 export default {
