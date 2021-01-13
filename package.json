@@ -47,7 +47,10 @@
     },
     "rules": {
       "vue/custom-event-name-casing": "warn",
-      "vue/attribute-hyphenation": "warn"
+      "vue/attribute-hyphenation": "warn",
+      "vue/html-indent": 0,
+      "vue/max-attributes-per-line": 0,
+      "vue/singleline-html-element-content-newline": 0
     }
   },
   "browserslist": [

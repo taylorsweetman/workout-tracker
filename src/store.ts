@@ -20,7 +20,7 @@ interface UserData {
 	days: Array<Day>
 }
 
-export const storeSymbol = Symbol('state');
+export const storeSymbol: Symbol = Symbol('state');
 
 export const createStore = () => {
 	const state: State = reactive({
