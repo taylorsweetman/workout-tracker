@@ -1,13 +1,16 @@
 import { inject, reactive } from 'vue';
 import { cloneDeep } from "lodash"
 
-interface AppUser {
-	uid: string
+export class AppUser {
+	uid: string;
+	constructor(uid: string) {
+		this.uid = uid;
+	}
 }
 
 interface State {
 	user: AppUser | null,
-	userData: UserData | null
+	userData: UserData | null,
 }
 
 interface Day {
@@ -20,9 +23,15 @@ interface UserData {
 	days: Array<Day>
 }
 
+interface StoreInstance {
+	setUser(arg0: AppUser | null): void,
+	setUserData(arg0: UserData | null): void, 
+	getState(): State
+}
+
 export const storeSymbol: Symbol = Symbol('state');
 
-export const createStore = () => {
+export const createStore = (): StoreInstance => {
 	const state: State = reactive({
         user: null,
         userData: null
@@ -43,4 +52,4 @@ export const createStore = () => {
 	return { setUser, setUserData, getState };
 };
 
-export const useStore = () => inject(storeSymbol);
+export const useStore = (): StoreInstance | undefined => inject(storeSymbol);

@@ -7,17 +7,18 @@
 	</div>
 </template>
 
-<script>
+<script lang="ts">
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
-import { useStore } from '../store';
+import { useStore, AppUser } from '../store';
+import { defineComponent } from 'vue';
 
-export default {
+export default defineComponent({
 	setup() {
 		return { store: useStore() };
 	},
-	emits: ['newUser'],
+	emits: ['new-user'],
 	data() {
 		return {
 			error: null
@@ -26,14 +27,18 @@ export default {
 	methods: {
 		performAuth() {
 			var that = this;
+			// ensure store is ready
+
 			var provider = new firebase.auth.GoogleAuthProvider();
 			firebase
 				.auth()
 				.signInWithPopup(provider)
 				.then((result) => {
-					var user = result.user;
-					that.store.setUser(user);
-					that.$emit('new-user');
+					if (result.user && that.store) {
+						var user = new AppUser(result.user.uid);
+						that.store.setUser(user);
+						that.$emit('new-user');
+					}
 				})
 				.catch((error) => {
 					that.error = error.message;
@@ -45,15 +50,17 @@ export default {
 				.auth()
 				.signOut()
 				.then(() => {
-					that.store.setUser(null);
-					that.store.setUserData(null);
+					if (that.store) {
+						that.store.setUser(null);
+						that.store.setUserData(null);
+					}
 				})
 				.catch((error) => {
 					that.error = error.message;
 				});
 		}
 	}
-};
+});
 </script>
 
 <style scoped>
