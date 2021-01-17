@@ -1,5 +1,5 @@
 import { inject, reactive } from 'vue';
-import { cloneDeep } from "lodash"
+import { cloneDeep } from 'lodash';
 
 export class AppUser {
 	uid: string;
@@ -9,39 +9,47 @@ export class AppUser {
 }
 
 interface State {
-	user: AppUser | null,
-	userData: UserData | null,
+	user: AppUser | null;
+	userData: UserData | null;
 }
 
-interface Day {
-	date: string,
-	exercise: string,
-	sets: Array<number>
+export class Day {
+	date: string;
+	exercise: string;
+	sets: Array<number>;
+	constructor(date: string, exercise: string, sets: Array<number>) {
+		this.date = date;
+		this.exercise = exercise;
+		this.sets = sets;
+	}
 }
 
-interface UserData {
-	days: Array<Day>
+export class UserData {
+	days: Array<Day>;
+	constructor(daysArr: Array<Day>) {
+		this.days = daysArr;
+	}
 }
 
 interface StoreInstance {
-	setUser(arg0: AppUser | null): void,
-	setUserData(arg0: UserData | null): void, 
-	getState(): State
+	setUser(arg0: AppUser | null): void;
+	setUserData(arg0: UserData | null): void;
+	getState(): State;
 }
 
 export const storeSymbol: Symbol = Symbol('state');
 
 export const createStore = (): StoreInstance => {
 	const state: State = reactive({
-        user: null,
-        userData: null
+		user: null,
+		userData: null
 	});
 
 	const setUser = function(newUser: AppUser) {
 		const newData = cloneDeep(newUser);
 		state.user = newData;
-    };
-    const setUserData = function(newUserData: UserData) {
+	};
+	const setUserData = function(newUserData: UserData) {
 		const newData = cloneDeep(newUserData);
 		state.userData = newData;
 	};
