@@ -12,19 +12,20 @@
 	</div>
 </template>
 
-<script>
+<script lang="ts">
 import Auth from './Auth.vue';
 import { useStore } from '../store';
+import { defineComponent } from 'vue';
 
-export default {
+export default defineComponent({
 	name: 'NavBar',
 	components: { Auth },
-	emits: ['newUser'],
+	emits: ['new-user'],
 	setup() {
 		return { store: useStore() };
 	},
 	computed: {
-		showHome() {
+		showHome(): boolean {
 			let show = true;
 			if (
 				this.currentRouteName() === 'Home' ||
@@ -34,11 +35,12 @@ export default {
 			}
 			return show;
 		},
-		showHistory() {
+		showHistory(): boolean {
 			let show = true;
-			if (
-				this.currentRouteName() === 'History' ||
-				this.store.getState().userData === null
+			if (!this.store) show = false;
+			else if (
+				!this.store.getState().userData ||
+				this.currentRouteName() === 'History'
 			) {
 				show = false;
 			}
@@ -46,22 +48,21 @@ export default {
 		}
 	},
 	methods: {
-		currentRouteName() {
+		currentRouteName(): string | symbol | null {
 			if (this.$route.name) {
 				return this.$route.name;
 			} else {
 				return null;
 			}
 		},
-		newUser() {
+		newUser(): void {
 			this.$emit('new-user');
 		}
 	}
-};
+});
 </script>
 
 <style scoped>
-/* Add a black background color to the top navigation */
 h1 {
 	color: white;
 }

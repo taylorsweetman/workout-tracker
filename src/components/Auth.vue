@@ -27,8 +27,6 @@ export default defineComponent({
 	methods: {
 		performAuth() {
 			var that = this;
-			// ensure store is ready
-
 			var provider = new firebase.auth.GoogleAuthProvider();
 			firebase
 				.auth()

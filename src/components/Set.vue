@@ -15,15 +15,17 @@
 	</div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { defineComponent } from 'vue';
+
+export default defineComponent({
 	name: 'Set',
 	props: {
-		exerciseName: String,
-		setNum: Number,
-		promptReps: Number
+		exerciseName: { type: String, default: '' },
+		setNum: { type: Number, default: -1 },
+		promptReps: { type: Number, default: -1 }
 	},
-	emits: ['setDone', 'setUndone'],
+	emits: ['set-done', 'set-undone'],
 	data() {
 		return {
 			finished: false,
@@ -31,10 +33,10 @@ export default {
 		};
 	},
 	methods: {
-		emitRepChange() {
+		emitRepChange(): void {
 			this.$emit('set-done', this.doneReps, this.setNum);
 		},
-		toggleDone() {
+		toggleDone(): void {
 			this.finished = !this.finished;
 			if (this.finished) {
 				this.emitRepChange();
@@ -42,16 +44,16 @@ export default {
 				this.$emit('set-undone', this.setNum);
 			}
 		},
-		repUp() {
+		repUp(): void {
 			this.doneReps++;
 			if (this.finished) this.emitRepChange();
 		},
-		repDown() {
+		repDown(): void {
 			if (this.doneReps > 0) this.doneReps--;
 			if (this.finished) this.emitRepChange();
 		}
 	}
-};
+});
 </script>
 
 <style scoped>
