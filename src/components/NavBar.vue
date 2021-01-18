@@ -14,7 +14,7 @@
 
 <script lang="ts">
 import Auth from './Auth.vue';
-import { useStore } from '../store';
+import { useStore, UserData } from '../store';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
@@ -37,9 +37,9 @@ export default defineComponent({
 		},
 		showHistory(): boolean {
 			let show = true;
-			if (!this.store) show = false;
-			else if (
-				!this.store.getState().userData ||
+			const userData = new UserData(this.store.getState().userData.days);
+			if (
+				!userData.isReady() ||
 				this.currentRouteName() === 'History'
 			) {
 				show = false;
@@ -48,11 +48,11 @@ export default defineComponent({
 		}
 	},
 	methods: {
-		currentRouteName(): string | symbol | null {
+		currentRouteName(): string | symbol {
 			if (this.$route.name) {
 				return this.$route.name;
 			} else {
-				return null;
+				return '';
 			}
 		},
 		newUser(): void {

@@ -1,5 +1,5 @@
 <template>
-	<div v-if="store.getState().user === null" class="box" @click="performAuth">
+	<div v-if="!store.getState().user.uid" class="box" @click="performAuth">
 		Register / Login
 	</div>
 	<div v-else class="box" @click="logout">
@@ -11,7 +11,7 @@
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
-import { useStore, AppUser } from '../store';
+import { useStore, AppUser, UserData } from '../store';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
@@ -21,7 +21,7 @@ export default defineComponent({
 	emits: ['new-user'],
 	data() {
 		return {
-			error: null
+			error: ''
 		};
 	},
 	methods: {
@@ -49,8 +49,8 @@ export default defineComponent({
 				.signOut()
 				.then(() => {
 					if (that.store) {
-						that.store.setUser(null);
-						that.store.setUserData(null);
+						that.store.setUser(new AppUser());
+						that.store.setUserData(new UserData());
 					}
 				})
 				.catch((error) => {

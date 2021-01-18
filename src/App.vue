@@ -11,7 +11,7 @@
 
 <script>
 import NavBar from './components/NavBar.vue';
-import { useStore } from './store';
+import { useStore, AppUser, UserData } from './store';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import WriteFirebase from './utils/WriteFirebase';
@@ -33,8 +33,8 @@ export default {
 	methods: {
 		wipeStore() {
 			if (this.testMode) {
-				this.store.setUser(null);
-				this.store.setUserData(null);
+				this.store.setUser(new AppUser());
+				this.store.setUserData(new UserData());
 			}
 		},
 		addUserDataToStore() {

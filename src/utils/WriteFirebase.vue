@@ -22,18 +22,16 @@ export default defineComponent({
 			this.updateFirebaseData();
 		},
 		updateFirebaseData(): void {
-			let user: AppUser | null = null;
-			try {
-				user = new AppUser(this.store.getState().user.uid);
-			} catch (error) {
-				console.log('Bad Store Data::', error);
+			let user = new AppUser();
+			if (this.store.getState().user.uid && dataObj) {
+				user.uid = this.store.getState().user.uid;
+			} else {
 				return;
 			}
 
-			const uid = user.uid;
 			var db = firebase.firestore();
 			db.collection('histories')
-				.doc(uid)
+				.doc(user.uid)
 				.set(dataObj)
 				.then(function() {
 					console.log('Document successfully written!');

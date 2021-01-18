@@ -18,14 +18,15 @@
 	</section>
 </template>
 
-<script>
+<script lang="ts">
 import Set from '../components/Set.vue';
-import { useStore } from '../store';
+import { useStore, Day } from '../store';
 import { beautifyStr } from '../utils/StringUtils';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
+import { defineComponent } from 'vue';
 
-export default {
+export default defineComponent({
 	name: 'ExerciseSession',
 	components: {
 		Set
@@ -41,8 +42,8 @@ export default {
 	},
 	data() {
 		return {
-			todayData: { sets: [] },
 			repsTuple: [0, 0, 0],
+			todayData: new Day(),
 			beautifyStr: beautifyStr
 		};
 	},
@@ -59,20 +60,21 @@ export default {
 		}
 	},
 	methods: {
-		runDataCalcs() {
+		runDataCalcs(): void {
 			const lastDayData = this.findLastDataPt();
 			const lastDayReps = this.getTotalRepsFromDay(lastDayData);
 			const newRepsTuple = this.findSetReps(lastDayReps);
 			this.prepData(newRepsTuple);
 		},
-		findLastDataPt() {
-			var daysArr = this.store.getState().userData.days;
-			if (!daysArr) {
-				return null;
+		findLastDataPt(): Day {
+			const data = this.store.getState().userData;
+
+			if (!data.days) {
+				return new Day();
 			}
 
-			for (var i = daysArr.length - 1; i >= 0; i--) {
-				const nextDayData = daysArr[i];
+			for (var i = data.days.length - 1; i >= 0; i--) {
+				const nextDayData = data.days[i];
 				const exercise = nextDayData.exercise;
 
 				if (exercise === this.localName) {
@@ -80,9 +82,9 @@ export default {
 				}
 			}
 
-			return null;
+			return new Day();
 		},
-		getTotalRepsFromDay(lastDayData) {
+		getTotalRepsFromDay(lastDayData: Day): number {
 			var totalReps = 0;
 			if (lastDayData) {
 				for (const nextReps of lastDayData.sets) {
@@ -91,7 +93,7 @@ export default {
 			}
 			return totalReps;
 		},
-		findSetReps(lastDayReps) {
+		findSetReps(lastDayReps: number): Array<number> {
 			const goalTotal = lastDayReps + 1;
 			const div = Math.floor(goalTotal / 3);
 			let rem = goalTotal % 3;
@@ -105,27 +107,22 @@ export default {
 
 			return tuple;
 		},
-		prepData(newRepsTuple) {
-			this.todayData.sets[0] = newRepsTuple[0];
-			this.todayData.sets[1] = newRepsTuple[1];
-			this.todayData.sets[2] = newRepsTuple[2];
-
-			var today = new Date().toJSON().slice(0, 10);
-			this.todayData.date = today;
-			this.todayData.exercise = this.localName;
+		prepData(newRepsTuple: Array<number>): void {
+			const today = new Date().toJSON().slice(0, 10);
+			this.todayData = new Day(today, this.localName, newRepsTuple);
 		},
-		setDone(completedReps, setNum) {
+		setDone(completedReps: number, setNum: number): void {
 			this.repsTuple[setNum - 1] = completedReps;
 		},
-		setUndone(setNum) {
+		setUndone(setNum: number): void {
 			this.repsTuple[setNum - 1] = 0;
 		},
-		prepTodaySets() {
-			for (var i = 0; i < 3; i++) {
+		prepTodaySets(): void {
+			for (let i = 0; i < 3; i++) {
 				this.todayData.sets[i] = this.repsTuple[i];
 			}
 		},
-		finished() {
+		finished(): void {
 			this.prepTodaySets();
 			const storeCopy = this.store.getState().userData;
 			storeCopy.days.push(this.todayData);
@@ -133,13 +130,20 @@ export default {
 			this.updateFirebaseData();
 			this.$router.push('/history');
 		},
-		updateFirebaseData() {
+		updateFirebaseData(): void {
 			const uid = this.store.getState().user.uid;
 			const objToWrite = this.store.getState().userData;
 			if (!uid || !objToWrite) {
 				console.error("Can't update Firebase.", uid, objToWrite);
 				return;
 			}
+
+			// need plain obj [] for firebase
+			const daysArr = objToWrite.days.map((nextDay) =>
+				Object.assign({}, nextDay)
+			);
+			objToWrite.days = daysArr;
+
 			var db = firebase.firestore();
 			db.collection('histories')
 				.doc(uid)
@@ -152,7 +156,7 @@ export default {
 				});
 		}
 	}
-};
+});
 </script>
 
 <style scoped>
