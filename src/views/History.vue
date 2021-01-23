@@ -40,18 +40,19 @@
 	</div>
 </template>
 
-<script>
-import { useStore } from '../store';
+<script lang="ts">
+import { useStore, Day } from '../store';
 import { beautifyStr } from '../utils/StringUtils';
+import { defineComponent } from 'vue';
 
-export default {
+export default defineComponent({
 	name: 'History',
 	setup() {
 		return { store: useStore() };
 	},
 	data() {
 		return {
-			uiHist: [],
+			uiHist: Array<Day>(),
 			beautifyStr: beautifyStr
 		};
 	},
@@ -59,28 +60,20 @@ export default {
 		this.buildUIHist();
 	},
 	methods: {
-		buildUIHist() {
+		buildUIHist(): void {
 			var userData = this.store.getState().userData;
 			var pattern = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}');
 
 			for (const session of userData.days) {
-				const date = session.date;
+				const { date, exercise, sets } = session;
 				if (pattern.test(date)) {
-					const exercise = session.exercise;
-					const set1reps = session.sets[0];
-					const set2reps = session.sets[1];
-					const set3reps = session.sets[2];
-					const objToAdd = {
-						date: date,
-						exercise: beautifyStr(exercise),
-						sets: [set1reps, set2reps, set3reps]
-					};
-					this.uiHist.unshift(objToAdd);
+					const dayToAdd = new Day(date, beautifyStr(exercise), sets);
+					this.uiHist.unshift(dayToAdd);
 				}
 			}
 		}
 	}
-};
+});
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
