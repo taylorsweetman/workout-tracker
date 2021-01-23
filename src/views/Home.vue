@@ -21,7 +21,7 @@ export default defineComponent({
 	methods: {
 		showExercises(): boolean {
 			let userData = new UserData(this.store.getState().userData.days);
-			return userData.isReady();
+			return userData.days[0] ? true : false;
 		}
 	}
 });

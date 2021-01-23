@@ -39,7 +39,7 @@ export default defineComponent({
 			let show = true;
 			const userData = new UserData(this.store.getState().userData.days);
 			if (
-				!userData.isReady() ||
+				!userData.days[0] ||
 				this.currentRouteName() === 'History'
 			) {
 				show = false;

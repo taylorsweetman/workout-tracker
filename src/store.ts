@@ -37,11 +37,6 @@ export class UserData {
 			this.days = [];
 		}
 	}
-	// TODO - remove isReady(), it's an anti-pattern
-	isReady(): boolean {
-		if (this.days[0] && this.days[0].date) return true;
-		else return false;
-	}
 }
 
 interface StoreInstance {
