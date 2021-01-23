@@ -20,7 +20,7 @@ const routes = [
 		component: History
 	},
 	{
-		path: '/exercise/:localName',
+		path: '/exercise/:appName',
 		name: 'ExerciseSession',
 		component: ExerciseSession,
 		props: true

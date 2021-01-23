@@ -4,30 +4,29 @@
 			<router-link
 				:to="{
 					name: 'ExerciseSession',
-					// TODO - remove this god awful tuple pattern -> new class perhaps?
-					params: { localName: exerciseTuple[0][0] }
+					params: { appName: exerciseTuple[0].appName }
 				}"
 				class="box"
 			>
-				{{ exerciseTuple[0][1] }}
+				{{ exerciseTuple[0].displayName }}
 			</router-link>
 			<router-link
 				:to="{
 					name: 'ExerciseSession',
-					params: { localName: exerciseTuple[1][0] }
+					params: { appName: exerciseTuple[1].appName }
 				}"
 				class="box"
 			>
-				{{ exerciseTuple[1][1] }}
+				{{ exerciseTuple[1].displayName }}
 			</router-link>
 			<router-link
 				:to="{
 					name: 'ExerciseSession',
-					params: { localName: exerciseTuple[2][0] }
+					params: { appName: exerciseTuple[2].appName }
 				}"
 				class="box"
 			>
-				{{ exerciseTuple[2][1] }}
+				{{ exerciseTuple[2].displayName }}
 			</router-link>
 		</div>
 		<router-view />
@@ -37,7 +36,7 @@
 <script lang="ts">
 import { useStore, UserData } from '../store';
 import { defineComponent } from 'vue';
-import { beautifyStr } from '../utils/StringUtils';
+import { SessionName } from '../views/ExerciseSession.vue';
 
 export default defineComponent({
 	name: 'Home',
@@ -47,13 +46,13 @@ export default defineComponent({
 	data() {
 		return {
 			exerciseTuple: [
-				['push_ups', beautifyStr('push_ups')],
-				['pull_ups', beautifyStr('pull_ups')],
-				['squats', beautifyStr('squats')]
+				new SessionName('push_ups'),
+				new SessionName('pull_ups'),
+				new SessionName('squats')
 			]
 		};
 	},
-	methods: {
+	computed: {
 		showExercises(): boolean {
 			let userData = new UserData(this.store.getState().userData.days);
 			return userData.days.length !== 0;

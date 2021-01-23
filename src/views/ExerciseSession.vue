@@ -4,7 +4,7 @@
 		<Set
 			v-for="(set, idx) in todayData.sets"
 			:key="idx"
-			:exercise-name="beautifyStr(todayData.exercise)"
+			:exercise-name="sessionName.displayName"
 			:set-num="idx + 1"
 			:prompt-reps="set"
 			@set-done="setDone"
@@ -26,13 +26,22 @@ import firebase from 'firebase/app';
 import 'firebase/firestore';
 import { defineComponent } from 'vue';
 
+export class SessionName {
+	displayName: string;
+	appName: string;
+	constructor(appName: string) {
+		this.appName = appName;
+		this.displayName = beautifyStr(appName);
+	}
+}
+
 export default defineComponent({
 	name: 'ExerciseSession',
 	components: {
 		Set
 	},
 	props: {
-		localName: {
+		appName: {
 			type: String,
 			required: true
 		}
@@ -44,7 +53,7 @@ export default defineComponent({
 		return {
 			repsTuple: [0, 0, 0],
 			todayData: new Day(),
-			beautifyStr: beautifyStr
+			sessionName: new SessionName(this.appName)
 		};
 	},
 	beforeMount() {
@@ -77,7 +86,7 @@ export default defineComponent({
 				const nextDayData = data.days[i];
 				const exercise = nextDayData.exercise;
 
-				if (exercise === this.localName) {
+				if (exercise === this.sessionName.appName) {
 					return nextDayData;
 				}
 			}
@@ -109,7 +118,11 @@ export default defineComponent({
 		},
 		prepData(newRepsTuple: Array<number>): void {
 			const today = new Date().toJSON().slice(0, 10);
-			this.todayData = new Day(today, this.localName, newRepsTuple);
+			this.todayData = new Day(
+				today,
+				this.sessionName.appName,
+				newRepsTuple
+			);
 		},
 		setDone(completedReps: number, setNum: number): void {
 			this.repsTuple[setNum - 1] = completedReps;
