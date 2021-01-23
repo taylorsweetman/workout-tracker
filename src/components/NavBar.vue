@@ -26,25 +26,15 @@ export default defineComponent({
 	},
 	computed: {
 		showHome(): boolean {
-			let show = true;
-			if (
-				this.currentRouteName() === 'Home' ||
-				this.currentRouteName() === 'Root'
-			) {
-				show = false;
-			}
-			return show;
+			return (
+				this.currentRouteName() !== 'Home' && this.currentRouteName() !== 'Root'
+			);
 		},
 		showHistory(): boolean {
-			let show = true;
 			const userData = new UserData(this.store.getState().userData.days);
-			if (
-				!userData.days[0] ||
-				this.currentRouteName() === 'History'
-			) {
-				show = false;
-			}
-			return show;
+			return (
+				userData.days.length !== 0 && this.currentRouteName() !== 'History'
+			);
 		}
 	},
 	methods: {

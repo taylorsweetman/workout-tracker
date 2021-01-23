@@ -1,5 +1,5 @@
 <template>
-	<div v-if="!store.getState().user.uid" class="box" @click="performAuth">
+	<div v-if="!loggedIn" class="box" @click="performAuth">
 		Register / Login
 	</div>
 	<div v-else class="box" @click="logout">
@@ -21,13 +21,15 @@ export default defineComponent({
 	emits: ['new-user'],
 	data() {
 		return {
-			error: ''
+			error: '',
+			loggedIn: false
 		};
 	},
 	methods: {
-		performAuth() {
+		performAuth(): void {
 			var that = this;
 			var provider = new firebase.auth.GoogleAuthProvider();
+			
 			firebase
 				.auth()
 				.signInWithPopup(provider)
@@ -35,6 +37,7 @@ export default defineComponent({
 					if (result.user && that.store) {
 						var user = new AppUser(result.user.uid);
 						that.store.setUser(user);
+						that.loggedIn = true;
 						that.$emit('new-user');
 					}
 				})
@@ -42,7 +45,7 @@ export default defineComponent({
 					that.error = error.message;
 				});
 		},
-		logout() {
+		logout(): void {
 			var that = this;
 			firebase
 				.auth()
@@ -52,6 +55,7 @@ export default defineComponent({
 						that.store.setUser(new AppUser());
 						that.store.setUserData(new UserData());
 					}
+					that.loggedIn = false;
 				})
 				.catch((error) => {
 					that.error = error.message;

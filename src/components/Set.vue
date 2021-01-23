@@ -38,11 +38,8 @@ export default defineComponent({
 		},
 		toggleDone(): void {
 			this.finished = !this.finished;
-			if (this.finished) {
-				this.emitRepChange();
-			} else {
-				this.$emit('set-undone', this.setNum);
-			}
+			if (this.finished) this.emitRepChange();
+			else this.$emit('set-undone', this.setNum);
 		},
 		repUp(): void {
 			this.doneReps++;

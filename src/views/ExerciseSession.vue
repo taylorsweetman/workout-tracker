@@ -51,7 +51,7 @@ export default defineComponent({
 		this.runDataCalcs();
 	},
 	computed: {
-		totalReps() {
+		totalReps(): number {
 			let total = 0;
 			for (let reps of this.repsTuple) {
 				total += reps;

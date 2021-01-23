@@ -7,9 +7,6 @@ export class AppUser {
 		if (uid) this.uid = uid;
 		else this.uid = '';
 	}
-	isReady() {
-		return this.uid ? true : false;
-	}
 }
 
 interface State {

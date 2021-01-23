@@ -48,7 +48,7 @@ export default defineComponent({
 				.then(function(doc) {
 					if (doc.exists && doc.data()) {
 						const fsData: any = doc.data();
-						const newData = new UserData(fsData?.days);
+						const newData = new UserData(fsData.days);
 						that.store.setUserData(newData);
 					} else {
 						console.log('No such document!');

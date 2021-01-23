@@ -25,18 +25,16 @@ export default defineComponent({
 			let user = new AppUser();
 			if (this.store.getState().user.uid && dataObj) {
 				user.uid = this.store.getState().user.uid;
-			} else {
-				return;
-			}
+			} else return;
 
 			var db = firebase.firestore();
 			db.collection('histories')
 				.doc(user.uid)
 				.set(dataObj)
-				.then(function() {
+				.then(() => {
 					console.log('Document successfully written!');
 				})
-				.catch(function(error) {
+				.catch((error) => {
 					console.error('Error writing document: ', error);
 				});
 		}
