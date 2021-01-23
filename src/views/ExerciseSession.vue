@@ -132,16 +132,18 @@ export default defineComponent({
 		},
 		updateFirebaseData(): void {
 			const uid = this.store.getState().user.uid;
-			const objToWrite = this.store.getState().userData;
+
+			// need vanilla obj for firebase
+			const objToWrite = { ...this.store.getState().userData };
 			if (!uid || !objToWrite) {
 				console.error("Can't update Firebase.", uid, objToWrite);
 				return;
 			}
 
-			// need plain obj [] for firebase
-			const daysArr = objToWrite.days.map((nextDay) =>
-				Object.assign({}, nextDay)
-			);
+			// need vanilla obj [] for firebase
+			const daysArr = objToWrite.days.map((nextDay) => {
+				return { ...nextDay };
+			});
 			objToWrite.days = daysArr;
 
 			var db = firebase.firestore();

@@ -9,14 +9,14 @@
 	</div>
 </template>
 
-<script>
+<script lang="ts">
 import NavBar from './components/NavBar.vue';
 import { useStore, AppUser, UserData } from './store';
 import firebase from 'firebase/app';
-import 'firebase/firestore';
-import WriteFirebase from './utils/WriteFirebase';
+import WriteFirebase from './utils/WriteFirebase.vue';
+import { defineComponent } from 'vue';
 
-export default {
+export default defineComponent({
 	name: 'App',
 	setup() {
 		return { store: useStore() };
@@ -31,34 +31,35 @@ export default {
 		WriteFirebase
 	},
 	methods: {
-		wipeStore() {
+		wipeStore(): void {
 			if (this.testMode) {
 				this.store.setUser(new AppUser());
 				this.store.setUserData(new UserData());
 			}
 		},
-		addUserDataToStore() {
-			if (this.testMode) {
-				var that = this;
-				var db = firebase.firestore();
-				const uid = that.store.getState().user.uid;
-				var docRef = db.collection('histories').doc(uid);
-				docRef
-					.get()
-					.then(function(doc) {
-						if (doc.exists) {
-							that.store.setUserData(doc.data());
-						} else {
-							console.log('No such document!');
-						}
-					})
-					.catch(function(error) {
-						console.log('Error getting document:', error);
-					});
-			}
+		// TODO - this method feels out of place. Put it with the other comp that uses firestore?
+		addUserDataToStore(): void {
+			var that = this;
+			var db = firebase.firestore();
+			const uid = that.store.getState().user.uid;
+			var docRef = db.collection('histories').doc(uid);
+			docRef
+				.get()
+				.then(function(doc) {
+					if (doc.exists && doc.data()) {
+						const fsData: any = doc.data();
+						const newData = new UserData(fsData?.days);
+						that.store.setUserData(newData);
+					} else {
+						console.log('No such document!');
+					}
+				})
+				.catch(function(error) {
+					console.log('Error getting document:', error);
+				});
 		}
 	}
-};
+});
 </script>
 
 <style>
