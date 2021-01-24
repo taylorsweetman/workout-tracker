@@ -54,6 +54,7 @@ export default defineComponent({
 					if (that.store) {
 						that.store.setUser(new AppUser());
 						that.store.setUserData(new UserData());
+						that.store.setConvenienceData(new UserData());
 					}
 					that.loggedIn = false;
 				})

@@ -4,7 +4,7 @@
 		<div v-if="testMode">
 			<write-firebase></write-firebase>
 			<button @click="wipeStore">Clear Store</button>
-			<p><strong>STORE DATA: </strong>{{ store.getState().userData }}</p>
+			<p><strong>STORE DATA: </strong>{{ store.getState() }}</p>
 		</div>
 	</div>
 </template>
@@ -35,6 +35,7 @@ export default defineComponent({
 			if (this.testMode) {
 				this.store.setUser(new AppUser());
 				this.store.setUserData(new UserData());
+				this.store.setConvenienceData(new UserData());
 			}
 		},
 		// TODO - this method feels out of place. Put it with the other comp that uses firestore?
@@ -50,6 +51,7 @@ export default defineComponent({
 						const fsData: any = doc.data();
 						const newData = new UserData(fsData.days);
 						that.store.setUserData(newData);
+						that.store.setConvenienceData(that.store.parseConvenienceData(newData));
 					} else {
 						console.log('No such document!');
 					}
@@ -57,7 +59,8 @@ export default defineComponent({
 				.catch(function(error) {
 					console.log('Error getting document:', error);
 				});
-		}
+
+		},
 	}
 });
 </script>

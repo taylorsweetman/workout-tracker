@@ -4,7 +4,7 @@
 		<Set
 			v-for="(set, idx) in todayData.sets"
 			:key="idx"
-			:exercise-name="sessionName.displayName"
+			:exercise-name="appSession.displayName"
 			:set-num="idx + 1"
 			:prompt-reps="set"
 			@set-done="setDone"
@@ -26,12 +26,19 @@ import firebase from 'firebase/app';
 import 'firebase/firestore';
 import { defineComponent } from 'vue';
 
-export class SessionName {
+export class AppSession {
 	displayName: string;
 	appName: string;
-	constructor(appName: string) {
+	lastDate: string;
+
+	constructor(appName: string, lastDate?: string) {
 		this.appName = appName;
 		this.displayName = beautifyStr(appName);
+		this.lastDate = lastDate ? lastDate : '';
+	}
+
+	setLastDate(lastDate: string): void {
+		this.lastDate = lastDate;
 	}
 }
 
@@ -53,7 +60,7 @@ export default defineComponent({
 		return {
 			repsTuple: [0, 0, 0],
 			todayData: new Day(),
-			sessionName: new SessionName(this.appName)
+			appSession: new AppSession(this.appName)
 		};
 	},
 	beforeMount() {
@@ -86,7 +93,8 @@ export default defineComponent({
 				const nextDayData = data.days[i];
 				const exercise = nextDayData.exercise;
 
-				if (exercise === this.sessionName.appName) {
+				if (exercise === this.appSession.appName) {
+					this.appSession.setLastDate(nextDayData.date);
 					return nextDayData;
 				}
 			}
@@ -120,7 +128,7 @@ export default defineComponent({
 			const today = new Date().toJSON().slice(0, 10);
 			this.todayData = new Day(
 				today,
-				this.sessionName.appName,
+				this.appSession.appName,
 				newRepsTuple
 			);
 		},
@@ -140,6 +148,7 @@ export default defineComponent({
 			const storeCopy = this.store.getState().userData;
 			storeCopy.days.push(this.todayData);
 			this.store.setUserData(storeCopy);
+			this.store.setConvenienceData(this.store.parseConvenienceData(storeCopy));
 			this.updateFirebaseData();
 			this.$router.push('/history');
 		},

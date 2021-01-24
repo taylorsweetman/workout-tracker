@@ -1,32 +1,35 @@
 <template>
 	<div>
-		<div class="row" v-show="showExercises">
+		<div class="row" v-if="showExercises">
 			<router-link
 				:to="{
 					name: 'ExerciseSession',
-					params: { appName: exerciseTuple[0].appName }
+					params: { appName: displayData[0].appName }
 				}"
 				class="box"
 			>
-				{{ exerciseTuple[0].displayName }}
+				{{ displayData[0].displayName }}<br /><br />
+				Last Workout: {{ displayData[0].lastDate }}
 			</router-link>
 			<router-link
 				:to="{
 					name: 'ExerciseSession',
-					params: { appName: exerciseTuple[1].appName }
+					params: { appName: displayData[1].appName }
 				}"
 				class="box"
 			>
-				{{ exerciseTuple[1].displayName }}
+				{{ displayData[1].displayName }}<br /><br />
+				Last Workout: {{ displayData[1].lastDate }}
 			</router-link>
 			<router-link
 				:to="{
 					name: 'ExerciseSession',
-					params: { appName: exerciseTuple[2].appName }
+					params: { appName: displayData[2].appName }
 				}"
 				class="box"
 			>
-				{{ exerciseTuple[2].displayName }}
+				{{ displayData[2].displayName }}<br /><br />
+				Last Workout: {{ displayData[2].lastDate }}
 			</router-link>
 		</div>
 		<router-view />
@@ -36,7 +39,7 @@
 <script lang="ts">
 import { useStore, UserData } from '../store';
 import { defineComponent } from 'vue';
-import { SessionName } from '../views/ExerciseSession.vue';
+import { AppSession } from '../views/ExerciseSession.vue'
 
 export default defineComponent({
 	name: 'Home',
@@ -45,17 +48,29 @@ export default defineComponent({
 	},
 	data() {
 		return {
-			exerciseTuple: [
-				new SessionName('push_ups'),
-				new SessionName('pull_ups'),
-				new SessionName('squats')
-			]
+			displayData: Array<AppSession>()
 		};
 	},
 	computed: {
 		showExercises(): boolean {
 			let userData = new UserData(this.store.getState().userData.days);
-			return userData.days.length !== 0;
+			if (userData.days.length !== 0) {
+				this.updateDisplayData();
+				return true;
+			} else return false;
+		}
+	},
+	methods: {
+		updateDisplayData(): void {
+			this.displayData = new Array<AppSession>();
+			const convData = this.store.getState().convenienceData;
+			const pattern = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}');
+			for (let i = 0; i < convData.days.length; i++) {
+				let { exercise, date } = convData.days[i];
+				date = pattern.test(date) ? date : 'No workout yet!';
+				const nextAS = new AppSession(exercise, date);
+				this.displayData.unshift(nextAS);
+			}
 		}
 	}
 });
