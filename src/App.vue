@@ -46,7 +46,7 @@ export default defineComponent({
 			var docRef = db.collection('histories').doc(uid);
 			docRef
 				.get()
-				.then(function(doc) {
+				.then((doc) => {
 					if (doc.exists && doc.data()) {
 						const fsData: any = doc.data();
 						const newData = new UserData(fsData.days);
@@ -56,7 +56,7 @@ export default defineComponent({
 						console.log('No such document!');
 					}
 				})
-				.catch(function(error) {
+				.catch((error) => {
 					console.log('Error getting document:', error);
 				});
 

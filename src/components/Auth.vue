@@ -1,10 +1,11 @@
 <template>
-	<div v-if="!loggedIn" class="box" @click="performAuth">
+	<div v-if="!loggedIn && !error" class="box" @click="performAuth">
 		Register / Login
 	</div>
-	<div v-else class="box" @click="logout">
+	<div v-else-if="loggedIn && !error" class="box" @click="logout">
 		Log Out
 	</div>
+	<div v-else class="box">Error Message: {{ error }}</div>
 </template>
 
 <script lang="ts">
@@ -29,12 +30,12 @@ export default defineComponent({
 		performAuth(): void {
 			var that = this;
 			var provider = new firebase.auth.GoogleAuthProvider();
-			
+
 			firebase
 				.auth()
 				.signInWithPopup(provider)
 				.then((result) => {
-					if (result.user && that.store) {
+					if (result.user) {
 						var user = new AppUser(result.user.uid);
 						that.store.setUser(user);
 						that.loggedIn = true;

@@ -9,7 +9,8 @@
 				class="box"
 			>
 				{{ displayData[0].displayName }}<br /><br />
-				Last Workout: {{ displayData[0].lastDate }}
+				Last Workout:<br />
+				{{ displayData[0].lastDate }}
 			</router-link>
 			<router-link
 				:to="{
@@ -19,7 +20,8 @@
 				class="box"
 			>
 				{{ displayData[1].displayName }}<br /><br />
-				Last Workout: {{ displayData[1].lastDate }}
+				Last Workout:<br />
+				{{ displayData[1].lastDate }}
 			</router-link>
 			<router-link
 				:to="{
@@ -29,7 +31,8 @@
 				class="box"
 			>
 				{{ displayData[2].displayName }}<br /><br />
-				Last Workout: {{ displayData[2].lastDate }}
+				Last Workout:<br />
+				{{ displayData[2].lastDate }}
 			</router-link>
 		</div>
 		<router-view />
