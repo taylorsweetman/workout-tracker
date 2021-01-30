@@ -63,6 +63,20 @@ h1 {
 	border-radius: 10px;
 }
 
+.box {
+	display: inline-block;
+	margin: 1%;
+
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+	margin: 1rem;
+	border-radius: 10px;
+	padding: 1rem;
+	background-color: #f05454;
+	color: white;
+	text-align: center;
+	text-decoration: none;
+}
+
 /* Style the links inside the navigation bar */
 .topnav .box {
 	color: #f2f2f2;

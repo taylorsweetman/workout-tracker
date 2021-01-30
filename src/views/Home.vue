@@ -39,7 +39,7 @@
 <script lang="ts">
 import { useStore, UserData } from '../store';
 import { defineComponent } from 'vue';
-import { AppSession } from '../views/ExerciseSession.vue'
+import { AppSession } from '../views/ExerciseSession.vue';
 
 export default defineComponent({
 	name: 'Home',
@@ -64,7 +64,7 @@ export default defineComponent({
 		updateDisplayData(): void {
 			this.displayData = new Array<AppSession>();
 			const convData = this.store.getState().convenienceData;
-			const pattern = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}');
+			const pattern = new RegExp(/^\d{4}-\d\d-\d\d$/);
 			for (let i = 0; i < convData.days.length; i++) {
 				let { exercise, date } = convData.days[i];
 				date = pattern.test(date) ? date : 'No workout yet!';
@@ -91,6 +91,7 @@ h1 {
 	background-color: #f05454;
 	color: white;
 	text-align: center;
+	text-decoration: none;
 }
 #app {
 	font-family: Avenir, Helvetica, Arial, sans-serif;
