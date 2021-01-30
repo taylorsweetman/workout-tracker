@@ -51,9 +51,10 @@ export default defineComponent({
 						const fsData: any = doc.data();
 						const newData = new UserData(fsData.days);
 						that.store.setUserData(newData);
+						// TODO, make the parse call below async
 						that.store.setConvenienceData(that.store.parseConvenienceData(newData));
 					} else {
-						console.log('No such document!');
+						that.handleNewUser();
 					}
 				})
 				.catch((error) => {
@@ -61,6 +62,10 @@ export default defineComponent({
 				});
 
 		},
+
+		handleNewUser(): void {
+			this.$router.push('/register');
+		}
 	}
 });
 </script>

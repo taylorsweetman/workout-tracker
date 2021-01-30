@@ -35,9 +35,11 @@ export default defineComponent({
 				.auth()
 				.signInWithPopup(provider)
 				.then((result) => {
-					if (result.user) {
-						var user = new AppUser(result.user.uid);
-						that.store.setUser(user);
+					const incomingUser = result.user;
+					if (incomingUser) {
+						const name = incomingUser.displayName ? incomingUser.displayName : '';
+						const appUser = new AppUser(incomingUser.uid, name);
+						that.store.setUser(appUser);
 						that.loggedIn = true;
 						that.$emit('new-user');
 					}

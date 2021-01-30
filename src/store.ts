@@ -3,9 +3,10 @@ import { cloneDeep } from 'lodash';
 
 export class AppUser {
 	uid: string;
-	constructor(uid?: string) {
-		if (uid) this.uid = uid;
-		else this.uid = '';
+	name: string;
+	constructor(uid?: string, name?: string) {
+		this.uid = uid ? uid : '';
+		this.name = name ? name : '';
 	}
 }
 
