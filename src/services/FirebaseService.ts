@@ -1,4 +1,6 @@
 import firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/firestore';
 import { UserData, AppUser } from '../store';
 
 const configOptions = {
@@ -11,10 +13,10 @@ const configOptions = {
 	measurementId: 'G-NT28P3L0PV'
 };
 
-firebase.initializeApp(configOptions);
-let db = firebase.firestore();
+const fbApp = firebase.initializeApp(configOptions);
+let db = firebase.firestore(fbApp);
 
-const parseFullForFirst = async (fullName: string): Promise<string> => {
+const parseFullForFirst = (fullName: string): string => {
 	const re = new RegExp(/^(\w+)/);
 	const matchArr = fullName.match(re);
 	const groupMatch = matchArr && matchArr.length > 1 ? matchArr[1] : 'New User';
@@ -65,7 +67,7 @@ export const performAuth = async (): Promise<AppUser> => {
 	let appUser = new AppUser();
 	if (incomingUser) {
 		const fullName = incomingUser.displayName ? incomingUser.displayName : '';
-		const name = await parseFullForFirst(fullName);
+		const name = parseFullForFirst(fullName);
 		appUser = new AppUser(incomingUser.uid, name);
 	}
 

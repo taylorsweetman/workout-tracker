@@ -1,8 +1,8 @@
 <template>
-	<div v-if="!loggedIn && !error" class="box" @click="performAuth">
+	<div v-if="!loggedIn && !error" class="box" @click="newUser">
 		Register / Login
 	</div>
-	<div v-else-if="loggedIn && !error" class="box" @click="logout">
+	<div v-else-if="loggedIn && !error" class="box" @click="localLogout">
 		Log Out
 	</div>
 	<div v-else class="box">Error Message: {{ error }}</div>
@@ -10,6 +10,7 @@
 
 <script lang="ts">
 import { useStore, AppUser, UserData } from '../store';
+import { performAuth, logout } from '../services/FirebaseService';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
@@ -24,53 +25,19 @@ export default defineComponent({
 		};
 	},
 	methods: {
-		performAuth(): void {
-			var that = this;
-			var provider = new firebase.auth.GoogleAuthProvider();
+		async newUser(): Promise<void> {
+			const appUser = await performAuth();
 
-			firebase
-				.auth()
-				.signInWithPopup(provider)
-				.then((result) => {
-					const incomingUser = result.user;
-					if (incomingUser) {
-						const fullName = incomingUser.displayName
-							? incomingUser.displayName
-							: '';
-						const name = that.parseFullForFirst(fullName);
-						const appUser = new AppUser(incomingUser.uid, name);
-						that.store.setUser(appUser);
-						that.loggedIn = true;
-						that.$emit('new-user');
-					}
-				})
-				.catch((error) => {
-					that.error = error.message;
-				});
+			this.store.setUser(appUser);
+			this.loggedIn = true;
+			this.$emit('new-user');
 		},
-		logout(): void {
-			var that = this;
-			firebase
-				.auth()
-				.signOut()
-				.then(() => {
-					if (that.store) {
-						that.store.setUser(new AppUser());
-						that.store.setUserData(new UserData());
-						that.store.setConvenienceData(new UserData());
-					}
-					that.loggedIn = false;
-				})
-				.catch((error) => {
-					that.error = error.message;
-				});
-		},
-		parseFullForFirst(fullName: string): string {
-			const re = new RegExp(/^(\w+)/);
-			const matchArr = fullName.match(re);
-			const groupMatch =
-				matchArr && matchArr.length > 1 ? matchArr[1] : 'New User';
-			return groupMatch;
+		async localLogout(): Promise<void> {
+			await logout();
+			this.store.setUser(new AppUser());
+			this.store.setUserData(new UserData());
+			this.store.setConvenienceData(new UserData());
+			this.loggedIn = false;
 		}
 	}
 });

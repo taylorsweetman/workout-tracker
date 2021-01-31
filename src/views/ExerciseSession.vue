@@ -22,6 +22,7 @@
 import Set from '../components/Set.vue';
 import { useStore, Day } from '../store';
 import { beautifyStr } from '../utils/StringUtils';
+import { writeUserData } from '../services/FirebaseService';
 import { defineComponent } from 'vue';
 
 export class AppSession {
@@ -150,32 +151,10 @@ export default defineComponent({
 			this.updateFirebaseData();
 			this.$router.push('/history');
 		},
-		updateFirebaseData(): void {
+		async updateFirebaseData(): Promise<void> {
 			const uid = this.store.getState().user.uid;
-
-			// need vanilla obj for firebase
-			const objToWrite = { ...this.store.getState().userData };
-			if (!uid || !objToWrite) {
-				console.error("Can't update Firebase.", uid, objToWrite);
-				return;
-			}
-
-			// need vanilla obj [] for firebase
-			const daysArr = objToWrite.days.map((nextDay) => {
-				return { ...nextDay };
-			});
-			objToWrite.days = daysArr;
-
-			var db = firebase.firestore();
-			db.collection('histories')
-				.doc(uid)
-				.set(objToWrite)
-				.then(function() {
-					console.log('Document successfully written!');
-				})
-				.catch(function(error) {
-					console.error('Error writing document: ', error);
-				});
+			const toWrite = this.store.getState().userData;
+			await writeUserData(uid, toWrite);
 		}
 	}
 });
