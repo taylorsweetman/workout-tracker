@@ -12,7 +12,6 @@
 <script lang="ts">
 import NavBar from './components/NavBar.vue';
 import { useStore, AppUser, UserData } from './store';
-import firebase from 'firebase/app';
 import WriteFirebase from './utils/WriteFirebase.vue';
 import { defineComponent } from 'vue';
 

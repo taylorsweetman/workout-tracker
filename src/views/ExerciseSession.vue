@@ -22,8 +22,6 @@
 import Set from '../components/Set.vue';
 import { useStore, Day } from '../store';
 import { beautifyStr } from '../utils/StringUtils';
-import firebase from 'firebase/app';
-import 'firebase/firestore';
 import { defineComponent } from 'vue';
 
 export class AppSession {

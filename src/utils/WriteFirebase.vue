@@ -7,8 +7,6 @@
 <script lang="ts">
 import { useStore, AppUser } from '../store';
 import dataObj from '../mock_data';
-import firebase from 'firebase/app';
-import 'firebase/firestore';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
