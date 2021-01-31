@@ -37,7 +37,10 @@ export default defineComponent({
 				.then((result) => {
 					const incomingUser = result.user;
 					if (incomingUser) {
-						const name = incomingUser.displayName ? incomingUser.displayName : '';
+						const fullName = incomingUser.displayName
+							? incomingUser.displayName
+							: '';
+						const name = that.parseFullForFirst(fullName);
 						const appUser = new AppUser(incomingUser.uid, name);
 						that.store.setUser(appUser);
 						that.loggedIn = true;
@@ -64,6 +67,13 @@ export default defineComponent({
 				.catch((error) => {
 					that.error = error.message;
 				});
+		},
+		parseFullForFirst(fullName: string): string {
+			const re = new RegExp(/^(\w+)/);
+			const matchArr = fullName.match(re);
+			const groupMatch =
+				matchArr && matchArr.length > 1 ? matchArr[1] : 'New User';
+			return groupMatch;
 		}
 	}
 });
