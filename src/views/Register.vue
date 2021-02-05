@@ -31,6 +31,7 @@
 			<input type="number" v-model="repsTuple[2]" />
 		</p>
 		<button @click="validateAndWrite">Submit</button>
+		<div v-if="error">{{ error }}</div>
 	</section>
 </template>
 
@@ -48,7 +49,8 @@ export default defineComponent({
 			name: '',
 			repsTuple: Array<string>(),
 			daysList: [new Day(), new Day(), new Day()],
-			today: new Date().toJSON().slice(0, 10)
+			today: new Date().toJSON().slice(0, 10),
+			error: ''
 		};
 	},
 	beforeMount() {
@@ -56,15 +58,38 @@ export default defineComponent({
 	},
 	methods: {
 		validateAndWrite(): void {
-			this.validate();
+			try {
+				this.validate();
+			} catch (e) {
+				this.error = e;
+				return;
+			}
 			this.write();
 		},
 		validate(): void {
-			// TODO, add the validation below
+			let namePattern = new RegExp(/^[\s\w]+$/);
+			let numPattern = new RegExp(/^\d+$/);
+			let nameSet = new Set<string>();
+
 			for (let idx in this.daysList) {
 				let nextDay = this.daysList[idx];
 				nextDay.date = idx;
-				nextDay.sets[0] = Number.parseFloat(this.repsTuple[idx]);
+
+				if (!nextDay.exercise || !namePattern.test(nextDay.exercise)) {
+					throw 'BAD_NAME:' + idx;
+				}
+
+				if (nameSet.has(nextDay.exercise)) {
+					throw 'DUP_NAME:' + idx;
+				} else {
+					nameSet.add(nextDay.exercise)
+				}
+
+				if (!this.repsTuple[idx] || !numPattern.test(this.repsTuple[idx])) {
+					throw 'BAD_REP:' + idx;
+				}
+
+				nextDay.sets[0] = Number.parseInt(this.repsTuple[idx]);
 			}
 		},
 		write(): void {
