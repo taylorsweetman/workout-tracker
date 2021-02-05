@@ -38,6 +38,7 @@ export default defineComponent({
 			this.store.setUserData(new UserData());
 			this.store.setConvenienceData(new UserData());
 			this.loggedIn = false;
+			this.$router.push('/');
 		}
 	}
 });

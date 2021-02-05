@@ -23,7 +23,7 @@ export class Day {
 	constructor(date?: string, exercise?: string, sets?: Array<number>) {
 		date ? (this.date = date) : (this.date = '');
 		exercise ? (this.exercise = exercise) : (this.exercise = '');
-		sets ? (this.sets = sets) : (this.sets = []);
+		sets ? (this.sets = sets) : (this.sets = [0, 0, 0]);
 	}
 }
 
