@@ -5,61 +5,58 @@
 			Let's get you started with tracking 3 exercises. Enter the names of the 3
 			exercises you'd like to track below.
 		</p>
-		<p>Exercise 1 Name:</p>
+		<label class="label">Exercise 1 Name: </label>
 		<input
 			type="text"
 			v-model="daysList[0].exercise"
 			:class="errNmTup[0] ? 'err' : ''"
 			@input="validateRow('NAME', 0)"
-		/>
-		<p>Exercise 2 Name:</p>
+		/><br />
+		<label class="label">Exercise 2 Name: </label>
 		<input
 			type="text"
 			v-model="daysList[1].exercise"
 			:class="errNmTup[1] ? 'err' : ''"
 			@input="validateRow('NAME', 1)"
-		/>
-		<p>Exercise 3 Name:</p>
+		/><br />
+		<label class="label">Exercise 3 Name: </label>
 		<input
 			type="text"
 			v-model="daysList[2].exercise"
 			:class="errNmTup[2] ? 'err' : ''"
 			@input="validateRow('NAME', 2)"
-		/>
+		/><br />
 		<p>
 			What's your best guess on how many reps of each exercise you could
 			complete in 1 set?
 		</p>
-		<p>
-			Best Guess on 1 set max reps ->
-			{{ daysList[0].exercise ? daysList[0].exercise : 'Exercise 1: ' }}
-			<input
-				type="number"
-				v-model="repsTuple[0]"
-				:class="errRpTup[0] ? 'err' : ''"
-				@input="validateRow('REP', 0)"
-			/>
-		</p>
-		<p>
-			Best Guess on 1 set max reps ->
-			{{ daysList[1].exercise ? daysList[1].exercise : 'Exercise 2: ' }}
-			<input
-				type="number"
-				v-model="repsTuple[1]"
-				:class="errRpTup[1] ? 'err' : ''"
-				@input="validateRow('REP', 1)"
-			/>
-		</p>
-		<p>
-			Best Guess on 1 set max reps ->
-			{{ daysList[2].exercise ? daysList[2].exercise : 'Exercise 3: ' }}
-			<input
-				type="number"
-				v-model="repsTuple[2]"
-				:class="errRpTup[2] ? 'err' : ''"
-				@input="validateRow('REP', 2)"
-			/>
-		</p>
+		<label class="label">
+			{{ daysList[0].exercise ? daysList[0].exercise : 'Exercise 1' }} Reps:
+		</label>
+		<input
+			type="number"
+			v-model="repsTuple[0]"
+			:class="errRpTup[0] ? 'err' : ''"
+			@input="validateRow('REP', 0)"
+		/><br />
+		<label class="label">
+			{{ daysList[1].exercise ? daysList[1].exercise : 'Exercise 2' }} Reps:
+		</label>
+		<input
+			type="number"
+			v-model="repsTuple[1]"
+			:class="errRpTup[1] ? 'err' : ''"
+			@input="validateRow('REP', 1)"
+		/><br />
+		<label class="label">
+			{{ daysList[2].exercise ? daysList[2].exercise : 'Exercise 3' }} Reps:
+		</label>
+		<input
+			type="number"
+			v-model="repsTuple[2]"
+			:class="errRpTup[2] ? 'err' : ''"
+			@input="validateRow('REP', 2)"
+		/><br />
 		<button @click="validateAndWrite">Submit</button>
 		<div v-if="error">{{ error }}</div>
 	</section>
@@ -181,5 +178,9 @@ export default defineComponent({
 .err {
 	color: red;
 	background-color: pink;
+}
+.label {
+	display: inline-block;
+	width: 9%;
 }
 </style>
