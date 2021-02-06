@@ -42,7 +42,7 @@
 <script lang="ts">
 import { useStore, UserData } from '../store';
 import { defineComponent } from 'vue';
-import { AppSession } from '../views/ExerciseSession.vue';
+import { ExerciseSession } from '../views/ExerciseSession.vue';
 
 export default defineComponent({
 	name: 'Home',
@@ -51,7 +51,7 @@ export default defineComponent({
 	},
 	data() {
 		return {
-			displayData: Array<AppSession>()
+			displayData: Array<ExerciseSession>()
 		};
 	},
 	computed: {
@@ -65,13 +65,13 @@ export default defineComponent({
 	},
 	methods: {
 		updateDisplayData(): void {
-			this.displayData = new Array<AppSession>();
+			this.displayData = new Array<ExerciseSession>();
 			const convData = this.store.getState().convenienceData;
 			const pattern = new RegExp(/^\d{4}-\d\d-\d\d$/);
 			for (let i = 0; i < convData.days.length; i++) {
 				let { exercise, date } = convData.days[i];
 				date = pattern.test(date) ? date : 'No workout yet!';
-				const nextAS = new AppSession(exercise, date);
+				const nextAS = new ExerciseSession(exercise, date);
 				this.displayData.unshift(nextAS);
 			}
 		}

@@ -10,21 +10,21 @@
 			type="text"
 			v-model="daysList[0].exercise"
 			:class="errNmTup[0] ? 'err' : ''"
-			@input="validate(true)"
+			@input="validateRow('NAME', 0)"
 		/>
 		<p>Exercise 2 Name:</p>
 		<input
 			type="text"
 			v-model="daysList[1].exercise"
 			:class="errNmTup[1] ? 'err' : ''"
-			@input="validate(true)"
+			@input="validateRow('NAME', 1)"
 		/>
 		<p>Exercise 3 Name:</p>
 		<input
 			type="text"
 			v-model="daysList[2].exercise"
 			:class="errNmTup[2] ? 'err' : ''"
-			@input="validate(true)"
+			@input="validateRow('NAME', 2)"
 		/>
 		<p>
 			What's your best guess on how many reps of each exercise you could
@@ -37,7 +37,7 @@
 				type="number"
 				v-model="repsTuple[0]"
 				:class="errRpTup[0] ? 'err' : ''"
-				@input="validate(true)"
+				@input="validateRow('REP', 0)"
 			/>
 		</p>
 		<p>
@@ -47,7 +47,7 @@
 				type="number"
 				v-model="repsTuple[1]"
 				:class="errRpTup[1] ? 'err' : ''"
-				@input="validate(true)"
+				@input="validateRow('REP', 1)"
 			/>
 		</p>
 		<p>
@@ -57,7 +57,7 @@
 				type="number"
 				v-model="repsTuple[2]"
 				:class="errRpTup[2] ? 'err' : ''"
-				@input="validate(true)"
+				@input="validateRow('REP', 2)"
 			/>
 		</p>
 		<button @click="validateAndWrite">Submit</button>
@@ -68,6 +68,7 @@
 <script lang="ts">
 import { useStore, Day } from '../store';
 import { writeUserData } from '../services/FirebaseService';
+import { urlifyStr } from '../utils/StringUtils';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
@@ -97,6 +98,26 @@ export default defineComponent({
 				this.$router.push('/');
 			} catch (e) {
 				this.error = e;
+			}
+		},
+		validateRow(type: string, idx: number) {
+			if ('NAME' == type) {
+				const namePattern = new RegExp(/^\w[\w\s]*$/);
+				this.errNmTup[idx] = 0;
+				if (
+					!this.daysList[idx].exercise ||
+					!namePattern.test(this.daysList[idx].exercise)
+				) {
+					this.errNmTup[idx] = 1;
+				}
+			}
+
+			if ('REP' == type) {
+				const numPattern = new RegExp(/^\d+$/);
+				this.errRpTup[idx] = 0;
+				if (!this.repsTuple[idx] || !numPattern.test(this.repsTuple[idx])) {
+					this.errRpTup[idx] = 1;
+				}
 			}
 		},
 		validate(silent: boolean): void {
@@ -139,6 +160,10 @@ export default defineComponent({
 
 			if (currentData.days.length !== 0) {
 				throw 'DUP_USER';
+			}
+
+			for (let nextDay of this.daysList) {
+				nextDay.exercise = urlifyStr(nextDay.exercise);
 			}
 
 			currentData.days = this.daysList;

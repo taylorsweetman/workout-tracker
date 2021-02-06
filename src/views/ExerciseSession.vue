@@ -25,7 +25,7 @@ import { beautifyStr } from '../utils/StringUtils';
 import { writeUserData } from '../services/FirebaseService';
 import { defineComponent } from 'vue';
 
-export class AppSession {
+export class ExerciseSession {
 	displayName: string;
 	appName: string;
 	lastDate: string;
@@ -59,7 +59,7 @@ export default defineComponent({
 		return {
 			repsTuple: [0, 0, 0],
 			todayData: new Day(),
-			appSession: new AppSession(this.appName)
+			appSession: new ExerciseSession(this.appName)
 		};
 	},
 	beforeMount() {
