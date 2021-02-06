@@ -6,11 +6,26 @@
 			exercises you'd like to track below.
 		</p>
 		<p>Exercise 1 Name:</p>
-		<input type="text" v-model="daysList[0].exercise" />
+		<input
+			type="text"
+			v-model="daysList[0].exercise"
+			:class="errNmTup[0] ? 'err' : ''"
+			@input="validate(true)"
+		/>
 		<p>Exercise 2 Name:</p>
-		<input type="text" v-model="daysList[1].exercise" />
+		<input
+			type="text"
+			v-model="daysList[1].exercise"
+			:class="errNmTup[1] ? 'err' : ''"
+			@input="validate(true)"
+		/>
 		<p>Exercise 3 Name:</p>
-		<input type="text" v-model="daysList[2].exercise" />
+		<input
+			type="text"
+			v-model="daysList[2].exercise"
+			:class="errNmTup[2] ? 'err' : ''"
+			@input="validate(true)"
+		/>
 		<p>
 			What's your best guess on how many reps of each exercise you could
 			complete in 1 set?
@@ -18,17 +33,32 @@
 		<p>
 			Best Guess on 1 set max reps ->
 			{{ daysList[0].exercise ? daysList[0].exercise : 'Exercise 1: ' }}
-			<input type="number" v-model="repsTuple[0]" />
+			<input
+				type="number"
+				v-model="repsTuple[0]"
+				:class="errRpTup[0] ? 'err' : ''"
+				@input="validate(true)"
+			/>
 		</p>
 		<p>
 			Best Guess on 1 set max reps ->
 			{{ daysList[1].exercise ? daysList[1].exercise : 'Exercise 2: ' }}
-			<input type="number" v-model="repsTuple[1]" />
+			<input
+				type="number"
+				v-model="repsTuple[1]"
+				:class="errRpTup[1] ? 'err' : ''"
+				@input="validate(true)"
+			/>
 		</p>
 		<p>
 			Best Guess on 1 set max reps ->
 			{{ daysList[2].exercise ? daysList[2].exercise : 'Exercise 3: ' }}
-			<input type="number" v-model="repsTuple[2]" />
+			<input
+				type="number"
+				v-model="repsTuple[2]"
+				:class="errRpTup[2] ? 'err' : ''"
+				@input="validate(true)"
+			/>
 		</p>
 		<button @click="validateAndWrite">Submit</button>
 		<div v-if="error">{{ error }}</div>
@@ -37,6 +67,7 @@
 
 <script lang="ts">
 import { useStore, Day } from '../store';
+import { writeUserData } from '../services/FirebaseService';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
@@ -50,7 +81,9 @@ export default defineComponent({
 			repsTuple: Array<string>(),
 			daysList: [new Day(), new Day(), new Day()],
 			today: new Date().toJSON().slice(0, 10),
-			error: ''
+			error: '',
+			errNmTup: [0, 0, 0],
+			errRpTup: [0, 0, 0]
 		};
 	},
 	beforeMount() {
@@ -59,44 +92,69 @@ export default defineComponent({
 	methods: {
 		validateAndWrite(): void {
 			try {
-				this.validate();
+				this.validate(false);
+				this.write();
+				this.$router.push('/');
 			} catch (e) {
 				this.error = e;
-				return;
 			}
-			this.write();
 		},
-		validate(): void {
-			let namePattern = new RegExp(/^[\s\w]+$/);
-			let numPattern = new RegExp(/^\d+$/);
-			let nameSet = new Set<string>();
+		validate(silent: boolean): void {
+			this.error = '';
+			this.errNmTup = [0, 0, 0];
+			this.errRpTup = [0, 0, 0];
+			const namePattern = new RegExp(/^\w[\w\s]*$/);
+			const numPattern = new RegExp(/^\d+$/);
+			const nameSet = new Set<string>();
+			let errArr = new Array<string>();
 
 			for (let idx in this.daysList) {
 				let nextDay = this.daysList[idx];
 				nextDay.date = idx;
 
 				if (!nextDay.exercise || !namePattern.test(nextDay.exercise)) {
-					throw 'BAD_NAME:' + idx;
+					errArr.push('BAD_NAME:' + idx);
+					this.errNmTup[idx] = 1;
 				}
 
 				if (nameSet.has(nextDay.exercise)) {
-					throw 'DUP_NAME:' + idx;
-				} else {
-					nameSet.add(nextDay.exercise)
-				}
+					errArr.push('DUP_NAME:' + idx);
+					this.errNmTup[idx] = 1;
+				} else nameSet.add(nextDay.exercise);
 
 				if (!this.repsTuple[idx] || !numPattern.test(this.repsTuple[idx])) {
-					throw 'BAD_REP:' + idx;
-				}
-
-				nextDay.sets[0] = Number.parseInt(this.repsTuple[idx]);
+					errArr.push('BAD_REP:' + idx);
+					this.errRpTup[idx] = 1;
+				} else nextDay.sets[0] = Number.parseInt(this.repsTuple[idx]);
 			}
+			if (errArr.length > 0 && !silent) throw errArr;
 		},
 		write(): void {
 			let currentData = this.store.getState().userData;
+			const uid = this.store.getState().user.uid;
+
+			if (!currentData || !uid) {
+				throw 'BAD_STATE';
+			}
+
+			if (currentData.days.length !== 0) {
+				throw 'DUP_USER';
+			}
+
 			currentData.days = this.daysList;
 			this.store.setUserData(currentData);
+			this.store.setConvenienceData(
+				this.store.parseConvenienceData(currentData)
+			);
+			writeUserData(uid, currentData);
 		}
 	}
 });
 </script>
+
+<style scoped>
+.err {
+	color: red;
+	background-color: pink;
+}
+</style>
