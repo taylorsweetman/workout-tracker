@@ -1,7 +1,7 @@
 .DS_Store
 node_modules
 /dist
-
+hosting*cache
 
 # local env files
 .env.local
