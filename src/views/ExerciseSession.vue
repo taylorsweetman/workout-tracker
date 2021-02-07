@@ -4,7 +4,7 @@
 		<Set
 			v-for="(set, idx) in todayData.sets"
 			:key="idx"
-			:exercise-name="beautifyStr(todayData.exercise)"
+			:exercise-name="appSession.displayName"
 			:set-num="idx + 1"
 			:prompt-reps="set"
 			@set-done="setDone"
@@ -22,9 +22,24 @@
 import Set from '../components/Set.vue';
 import { useStore, Day } from '../store';
 import { beautifyStr } from '../utils/StringUtils';
-import firebase from 'firebase/app';
-import 'firebase/firestore';
+import { writeUserData } from '../services/FirebaseService';
 import { defineComponent } from 'vue';
+
+export class ExerciseSession {
+	displayName: string;
+	appName: string;
+	lastDate: string;
+
+	constructor(appName: string, lastDate?: string) {
+		this.appName = appName;
+		this.displayName = beautifyStr(appName);
+		this.lastDate = lastDate ? lastDate : '';
+	}
+
+	setLastDate(lastDate: string): void {
+		this.lastDate = lastDate;
+	}
+}
 
 export default defineComponent({
 	name: 'ExerciseSession',
@@ -32,7 +47,7 @@ export default defineComponent({
 		Set
 	},
 	props: {
-		localName: {
+		appName: {
 			type: String,
 			required: true
 		}
@@ -44,7 +59,7 @@ export default defineComponent({
 		return {
 			repsTuple: [0, 0, 0],
 			todayData: new Day(),
-			beautifyStr: beautifyStr
+			appSession: new ExerciseSession(this.appName)
 		};
 	},
 	beforeMount() {
@@ -77,7 +92,8 @@ export default defineComponent({
 				const nextDayData = data.days[i];
 				const exercise = nextDayData.exercise;
 
-				if (exercise === this.localName) {
+				if (exercise === this.appSession.appName) {
+					this.appSession.setLastDate(nextDayData.date);
 					return nextDayData;
 				}
 			}
@@ -109,7 +125,11 @@ export default defineComponent({
 		},
 		prepData(newRepsTuple: Array<number>): void {
 			const today = new Date().toJSON().slice(0, 10);
-			this.todayData = new Day(today, this.localName, newRepsTuple);
+			this.todayData = new Day(
+				today,
+				this.appSession.appName,
+				newRepsTuple
+			);
 		},
 		setDone(completedReps: number, setNum: number): void {
 			this.repsTuple[setNum - 1] = completedReps;
@@ -127,35 +147,14 @@ export default defineComponent({
 			const storeCopy = this.store.getState().userData;
 			storeCopy.days.push(this.todayData);
 			this.store.setUserData(storeCopy);
+			this.store.setConvenienceData(this.store.parseConvenienceData(storeCopy));
 			this.updateFirebaseData();
 			this.$router.push('/history');
 		},
-		updateFirebaseData(): void {
+		async updateFirebaseData(): Promise<void> {
 			const uid = this.store.getState().user.uid;
-
-			// need vanilla obj for firebase
-			const objToWrite = { ...this.store.getState().userData };
-			if (!uid || !objToWrite) {
-				console.error("Can't update Firebase.", uid, objToWrite);
-				return;
-			}
-
-			// need vanilla obj [] for firebase
-			const daysArr = objToWrite.days.map((nextDay) => {
-				return { ...nextDay };
-			});
-			objToWrite.days = daysArr;
-
-			var db = firebase.firestore();
-			db.collection('histories')
-				.doc(uid)
-				.set(objToWrite)
-				.then(function() {
-					console.log('Document successfully written!');
-				})
-				.catch(function(error) {
-					console.error('Error writing document: ', error);
-				});
+			const toWrite = this.store.getState().userData;
+			await writeUserData(uid, toWrite);
 		}
 	}
 });

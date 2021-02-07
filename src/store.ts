@@ -3,15 +3,17 @@ import { cloneDeep } from 'lodash';
 
 export class AppUser {
 	uid: string;
-	constructor(uid?: string) {
-		if (uid) this.uid = uid;
-		else this.uid = '';
+	name: string;
+	constructor(uid?: string, name?: string) {
+		this.uid = uid ? uid : '';
+		this.name = name ? name : '';
 	}
 }
 
 interface State {
 	user: AppUser;
 	userData: UserData;
+	convenienceData: UserData;
 }
 
 export class Day {
@@ -21,7 +23,7 @@ export class Day {
 	constructor(date?: string, exercise?: string, sets?: Array<number>) {
 		date ? (this.date = date) : (this.date = '');
 		exercise ? (this.exercise = exercise) : (this.exercise = '');
-		sets ? (this.sets = sets) : (this.sets = []);
+		sets ? (this.sets = sets) : (this.sets = [0, 0, 0]);
 	}
 }
 
@@ -31,7 +33,7 @@ export class UserData {
 		if (daysArr) {
 			this.days = daysArr;
 		} else {
-			this.days = [];
+			this.days = Array<Day>();
 		}
 	}
 }
@@ -39,6 +41,8 @@ export class UserData {
 interface StoreInstance {
 	setUser(arg0: AppUser): void;
 	setUserData(arg0: UserData): void;
+	setConvenienceData(arg0: UserData): void;
+	parseConvenienceData(arg0: UserData): UserData;
 	getState(): State;
 }
 
@@ -47,22 +51,45 @@ export const storeSymbol: Symbol = Symbol('state');
 export const createStore = (): StoreInstance => {
 	const state: State = reactive({
 		user: new AppUser(),
-		userData: new UserData()
+		userData: new UserData(),
+		convenienceData: new UserData()
 	});
-
-	const setUser = function(newUser: AppUser) {
+	const setUser = (newUser: AppUser) => {
 		const newData = cloneDeep(newUser);
 		state.user = newData;
 	};
-	const setUserData = function(newUserData: UserData) {
+	const setUserData = (newUserData: UserData) => {
 		const newData = cloneDeep(newUserData);
 		state.userData = newData;
+	};
+	const setConvenienceData = (convenienceData: UserData) => {
+		const newData = cloneDeep(convenienceData);
+		state.convenienceData = newData;
 	};
 	const getState = (): State => {
 		return cloneDeep(state);
 	};
 
-	return { setUser, setUserData, getState };
+	const parseConvenienceData = (fullUserData: UserData): UserData => {
+		let result = new UserData();
+		let insertedExercises = new Set<string>();
+		let count = 0;
+		for (let i = fullUserData.days.length - 1; i > -1; i--) {
+			const nextDay = fullUserData.days[i];
+			const nextEx = nextDay.exercise;
+			if (!insertedExercises.has(nextEx)) {
+				result.days.push(nextDay);
+				insertedExercises.add(nextEx);
+				count++;
+				if (count >= 3) {
+					break;
+				}
+			}
+		}
+		return result;
+	};
+
+	return { setUser, setUserData, setConvenienceData, parseConvenienceData, getState };
 };
 
 export const useStore = (): StoreInstance => {

@@ -2,18 +2,17 @@
 	<div>
 		<nav-bar @new-user="addUserDataToStore" />
 		<div v-if="testMode">
-			<write-firebase></write-firebase>
-			<button @click="wipeStore">Clear Store</button>
-			<p><strong>STORE DATA: </strong>{{ store.getState().userData }}</p>
+			<button @click="write">Write Store to FB</button>
+			<button @click="wipeStore">Clear User Data</button>
+			<p><strong>STORE DATA: </strong>{{ store.getState() }}</p>
 		</div>
 	</div>
 </template>
 
 <script lang="ts">
 import NavBar from './components/NavBar.vue';
-import { useStore, AppUser, UserData } from './store';
-import firebase from 'firebase/app';
-import WriteFirebase from './utils/WriteFirebase.vue';
+import { useStore, UserData } from './store';
+import { readUserDataById, writeUserData } from './services/FirebaseService';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
@@ -27,36 +26,39 @@ export default defineComponent({
 		};
 	},
 	components: {
-		NavBar,
-		WriteFirebase
+		NavBar
 	},
 	methods: {
 		wipeStore(): void {
 			if (this.testMode) {
-				this.store.setUser(new AppUser());
 				this.store.setUserData(new UserData());
+				this.store.setConvenienceData(new UserData());
 			}
 		},
 		// TODO - this method feels out of place. Put it with the other comp that uses firestore?
-		addUserDataToStore(): void {
-			var that = this;
-			var db = firebase.firestore();
-			const uid = that.store.getState().user.uid;
-			var docRef = db.collection('histories').doc(uid);
-			docRef
-				.get()
-				.then(function(doc) {
-					if (doc.exists && doc.data()) {
-						const fsData: any = doc.data();
-						const newData = new UserData(fsData.days);
-						that.store.setUserData(newData);
-					} else {
-						console.log('No such document!');
-					}
-				})
-				.catch(function(error) {
-					console.log('Error getting document:', error);
-				});
+		async addUserDataToStore(): Promise<void> {
+			const uid = this.store.getState().user.uid;
+			const userData = await readUserDataById(uid);
+			if (userData.days && userData.days.length > 0) {
+				this.store.setUserData(userData);
+				this.store.setConvenienceData(
+					this.store.parseConvenienceData(userData)
+				);
+			} else {
+				this.handleNewUser();
+			}
+		},
+
+		async write(): Promise<void> {
+			if (this.testMode) {
+				const uid = this.store.getState().user.uid;
+				const userData = this.store.getState().userData;
+				await writeUserData(uid, userData);
+			}
+		},
+
+		handleNewUser(): void {
+			this.$router.push('/register');
 		}
 	}
 });

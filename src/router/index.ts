@@ -2,6 +2,7 @@ import { createRouter, createWebHashHistory } from 'vue-router';
 import Home from '../views/Home.vue';
 import History from '../views/History.vue';
 import ExerciseSession from '../views/ExerciseSession.vue';
+import Register from '../views/Register.vue';
 
 const routes = [
 	{
@@ -20,10 +21,15 @@ const routes = [
 		component: History
 	},
 	{
-		path: '/exercise/:localName',
+		path: '/exercise/:appName',
 		name: 'ExerciseSession',
 		component: ExerciseSession,
 		props: true
+	},
+	{
+		path: '/register',
+		name: 'Register',
+		component: Register
 	}
 ];
 

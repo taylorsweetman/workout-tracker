@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<div class="topnav">
-			<h1>Taylor's Workout App</h1>
+			<h1>{{ titleName }} Workout App</h1>
 			<router-link v-show="showHome" to="/home" class="box">Home</router-link>
 			<router-link v-show="showHistory" to="/history" class="box">
 				History
@@ -27,7 +27,9 @@ export default defineComponent({
 	computed: {
 		showHome(): boolean {
 			return (
-				this.currentRouteName() !== 'Home' && this.currentRouteName() !== 'Root'
+				this.currentRouteName() !== 'Home' &&
+				this.currentRouteName() !== 'Root' &&
+				this.currentRouteName() !== 'Register'
 			);
 		},
 		showHistory(): boolean {
@@ -35,6 +37,10 @@ export default defineComponent({
 			return (
 				userData.days.length !== 0 && this.currentRouteName() !== 'History'
 			);
+		},
+		titleName(): string {
+			const currentState = this.store.getState();
+			return currentState.user.name ? currentState.user.name + "'s" : 'Simple';
 		}
 	},
 	methods: {
@@ -61,6 +67,20 @@ h1 {
 	background-color: #30475e;
 	overflow: hidden;
 	border-radius: 10px;
+}
+
+.box {
+	display: inline-block;
+	margin: 1%;
+
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+	margin: 1rem;
+	border-radius: 10px;
+	padding: 1rem;
+	background-color: #f05454;
+	color: white;
+	text-align: center;
+	text-decoration: none;
 }
 
 /* Style the links inside the navigation bar */

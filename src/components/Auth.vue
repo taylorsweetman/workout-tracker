@@ -1,17 +1,16 @@
 <template>
-	<div v-if="!loggedIn" class="box" @click="performAuth">
+	<div v-if="!loggedIn && !error" class="box" @click="newUser">
 		Register / Login
 	</div>
-	<div v-else class="box" @click="logout">
+	<div v-else-if="loggedIn && !error" class="box" @click="localLogout">
 		Log Out
 	</div>
+	<div v-else class="box">Error Message: {{ error }}</div>
 </template>
 
 <script lang="ts">
-import firebase from 'firebase/app';
-import 'firebase/auth';
-import 'firebase/firestore';
 import { useStore, AppUser, UserData } from '../store';
+import { performAuth, logout } from '../services/FirebaseService';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
@@ -26,40 +25,20 @@ export default defineComponent({
 		};
 	},
 	methods: {
-		performAuth(): void {
-			var that = this;
-			var provider = new firebase.auth.GoogleAuthProvider();
-			
-			firebase
-				.auth()
-				.signInWithPopup(provider)
-				.then((result) => {
-					if (result.user && that.store) {
-						var user = new AppUser(result.user.uid);
-						that.store.setUser(user);
-						that.loggedIn = true;
-						that.$emit('new-user');
-					}
-				})
-				.catch((error) => {
-					that.error = error.message;
-				});
+		async newUser(): Promise<void> {
+			const appUser = await performAuth();
+
+			this.store.setUser(appUser);
+			this.loggedIn = true;
+			this.$emit('new-user');
 		},
-		logout(): void {
-			var that = this;
-			firebase
-				.auth()
-				.signOut()
-				.then(() => {
-					if (that.store) {
-						that.store.setUser(new AppUser());
-						that.store.setUserData(new UserData());
-					}
-					that.loggedIn = false;
-				})
-				.catch((error) => {
-					that.error = error.message;
-				});
+		async localLogout(): Promise<void> {
+			await logout();
+			this.store.setUser(new AppUser());
+			this.store.setUserData(new UserData());
+			this.store.setConvenienceData(new UserData());
+			this.loggedIn = false;
+			this.$router.push('/');
 		}
 	}
 });
