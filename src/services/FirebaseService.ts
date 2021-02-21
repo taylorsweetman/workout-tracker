@@ -5,7 +5,7 @@ import { UserData, AppUser } from '../store';
 
 const configOptions = {
 	apiKey: 'AIzaSyA7a901k5rFaSoJGnRXaa7IbuJruQVh_pM',
-	authDomain: 'auth.simpleworkout.app',
+	authDomain: 'auth.easyworkout.app',
 	projectId: 'workout-app-e5db1',
 	storageBucket: 'workout-app-e5db1.appspot.com',
 	messagingSenderId: '823373219552',
