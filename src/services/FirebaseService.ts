@@ -5,7 +5,7 @@ import { UserData, AppUser } from '../store';
 
 const configOptions = {
 	apiKey: 'AIzaSyA7a901k5rFaSoJGnRXaa7IbuJruQVh_pM',
-	authDomain: 'workout-app-e5db1.firebaseapp.com',
+	authDomain: 'easyworkout.app',
 	projectId: 'workout-app-e5db1',
 	storageBucket: 'workout-app-e5db1.appspot.com',
 	messagingSenderId: '823373219552',
@@ -62,6 +62,8 @@ export const performAuth = async (): Promise<AppUser> => {
 	const provider = new firebase.auth.GoogleAuthProvider();
 
 	const result = await firebase.auth().signInWithPopup(provider);
+
+	// What happens when there is an exception above?
 
 	const incomingUser = result.user;
 	let appUser = new AppUser();

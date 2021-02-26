@@ -40,7 +40,7 @@ export default defineComponent({
 		},
 		titleName(): string {
 			const currentState = this.store.getState();
-			return currentState.user.name ? currentState.user.name + "'s" : 'Simple';
+			return currentState.user.name ? currentState.user.name + "'s" : 'Easy';
 		}
 	},
 	methods: {
