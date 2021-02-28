@@ -1,64 +1,73 @@
 <template>
 	<section>
-		<h1>Welcome, {{ name }}</h1>
-		<p>
-			Let's get you started with tracking 3 exercises. Enter the names of the 3
-			exercises you'd like to track below.
-		</p>
-		<label class="label">Exercise 1 Name: </label>
-		<input
-			type="text"
-			v-model="daysList[0].exercise"
-			:class="errNmTup[0] ? 'err' : ''"
-			@input="validateRow('NAME', 0)"
-		/><br />
-		<label class="label">Exercise 2 Name: </label>
-		<input
-			type="text"
-			v-model="daysList[1].exercise"
-			:class="errNmTup[1] ? 'err' : ''"
-			@input="validateRow('NAME', 1)"
-		/><br />
-		<label class="label">Exercise 3 Name: </label>
-		<input
-			type="text"
-			v-model="daysList[2].exercise"
-			:class="errNmTup[2] ? 'err' : ''"
-			@input="validateRow('NAME', 2)"
-		/><br />
-		<p>
-			What's your best guess on how many reps of each exercise you could
-			complete in 1 set?
-		</p>
-		<label class="label">
-			{{ daysList[0].exercise ? daysList[0].exercise : 'Exercise 1' }} Reps:
-		</label>
-		<input
-			type="number"
-			v-model="repsTuple[0]"
-			:class="errRpTup[0] ? 'err' : ''"
-			@input="validateRow('REP', 0)"
-		/><br />
-		<label class="label">
-			{{ daysList[1].exercise ? daysList[1].exercise : 'Exercise 2' }} Reps:
-		</label>
-		<input
-			type="number"
-			v-model="repsTuple[1]"
-			:class="errRpTup[1] ? 'err' : ''"
-			@input="validateRow('REP', 1)"
-		/><br />
-		<label class="label">
-			{{ daysList[2].exercise ? daysList[2].exercise : 'Exercise 3' }} Reps:
-		</label>
-		<input
-			type="number"
-			v-model="repsTuple[2]"
-			:class="errRpTup[2] ? 'err' : ''"
-			@input="validateRow('REP', 2)"
-		/><br />
-		<button @click="validateAndWrite">Submit</button>
-		<div v-if="error">{{ error }}</div>
+		<div v-if="!regDone">
+			<h1>Welcome, {{ name }}</h1>
+			<p>
+				Let's get you started with tracking 3 <u>body weight</u> exercises.
+				Enter the names of the 3 exercises you'd like to track below.
+			</p>
+			<label class="label">Exercise 1 Name: </label>
+			<input
+				type="text"
+				v-model="daysList[0].exercise"
+				:class="errNmTup[0] ? 'err' : ''"
+				@input="validateRow('NAME', 0)"
+			/>
+			<br />
+			<label class="label">Exercise 2 Name: </label>
+			<input
+				type="text"
+				v-model="daysList[1].exercise"
+				:class="errNmTup[1] ? 'err' : ''"
+				@input="validateRow('NAME', 1)"
+			/>
+			<br />
+			<label class="label">Exercise 3 Name: </label>
+			<input
+				type="text"
+				v-model="daysList[2].exercise"
+				:class="errNmTup[2] ? 'err' : ''"
+				@input="validateRow('NAME', 2)"
+			/>
+			<br />
+			<p>
+				What's your best guess on how many reps of each exercise you could
+				complete in 1 set?
+			</p>
+			<label class="label">
+				{{ daysList[0].exercise ? daysList[0].exercise : 'Exercise 1' }} Reps:
+			</label>
+			<input
+				type="number"
+				v-model="repsTuple[0]"
+				:class="errRpTup[0] ? 'err' : ''"
+				@input="validateRow('REP', 0)"
+			/>
+			<br />
+			<label class="label">
+				{{ daysList[1].exercise ? daysList[1].exercise : 'Exercise 2' }} Reps:
+			</label>
+			<input
+				type="number"
+				v-model="repsTuple[1]"
+				:class="errRpTup[1] ? 'err' : ''"
+				@input="validateRow('REP', 1)"
+			/>
+			<br />
+			<label class="label">
+				{{ daysList[2].exercise ? daysList[2].exercise : 'Exercise 3' }} Reps:
+			</label>
+			<input
+				type="number"
+				v-model="repsTuple[2]"
+				:class="errRpTup[2] ? 'err' : ''"
+				@input="validateRow('REP', 2)"
+			/>
+			<br />
+			<button @click="validateAndWrite">I'm Ready!</button>
+			<div v-if="error">{{ error }}</div>
+		</div>
+		<how-to v-else />
 	</section>
 </template>
 
@@ -66,12 +75,16 @@
 import { useStore, Day } from '../store';
 import { writeUserData } from '../services/FirebaseService';
 import { urlifyStr } from '../utils/StringUtils';
+import HowTo from '../components/HowTo.vue';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
 	name: 'Register',
 	setup() {
 		return { store: useStore() };
+	},
+	components: {
+		HowTo
 	},
 	data() {
 		return {
@@ -81,7 +94,8 @@ export default defineComponent({
 			today: new Date().toJSON().slice(0, 10),
 			error: '',
 			errNmTup: [0, 0, 0],
-			errRpTup: [0, 0, 0]
+			errRpTup: [0, 0, 0],
+			regDone: false
 		};
 	},
 	beforeMount() {
@@ -92,7 +106,7 @@ export default defineComponent({
 			try {
 				this.validate(false);
 				this.write();
-				this.$router.push('/');
+				this.regDone = true;
 			} catch (e) {
 				this.error = e;
 			}
@@ -182,5 +196,17 @@ export default defineComponent({
 .label {
 	display: inline-block;
 	width: 9%;
+}
+button {
+	margin: 1%;
+
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+	margin: 1rem;
+	margin-bottom: 0%;
+	border-radius: 10px;
+	padding: 1rem;
+	background-color: #f05454;
+	color: white;
+	text-align: center;
 }
 </style>

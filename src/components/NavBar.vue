@@ -6,7 +6,7 @@
 			<router-link v-show="showHistory" to="/history" class="box">
 				History
 			</router-link>
-			<auth class="box" @new-user="newUser" />
+			<auth v-show="showAuth" class="box" @new-user="newUser" />
 		</div>
 		<router-view />
 	</div>
@@ -35,8 +35,13 @@ export default defineComponent({
 		showHistory(): boolean {
 			const userData = new UserData(this.store.getState().userData.days);
 			return (
-				userData.days.length !== 0 && this.currentRouteName() !== 'History'
+				userData.days.length !== 0 &&
+				this.currentRouteName() !== 'History' &&
+				this.currentRouteName() !== 'Register'
 			);
+		},
+		showAuth(): boolean {
+			return this.currentRouteName() !== 'Register';
 		},
 		titleName(): string {
 			const currentState = this.store.getState();
