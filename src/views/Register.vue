@@ -64,7 +64,7 @@
 				@input="validateRow('REP', 2)"
 			/>
 			<br />
-			<button @click="validateAndWrite">I'm Ready!</button>
+			<button @click="validateAndWrite">Next</button>
 			<div v-if="error">{{ error }}</div>
 		</div>
 		<how-to v-else />

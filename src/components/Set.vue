@@ -2,7 +2,7 @@
 	<div class="comp">
 		<button @click="toggleDone" :class="finished ? 'finished' : ''">
 			<h1>{{ exerciseName }}</h1>
-			<h1>Reps: {{ doneReps }}</h1>
+			<h1>Reps: {{ doneReps }} {{ setNum === 3 ? '*' : '' }}</h1>
 		</button>
 		<div class="button-pack">
 			<button class="adjust" @click="repDown">

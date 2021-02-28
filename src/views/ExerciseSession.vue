@@ -12,6 +12,7 @@
 		/>
 		<br />
 		<br />
+		<p>* minimum reps, go for as many as you can</p>
 		<button @click="finished">
 			<h1>Done!</h1>
 		</button>
