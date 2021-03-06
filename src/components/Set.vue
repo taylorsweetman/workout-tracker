@@ -57,28 +57,35 @@ export default defineComponent({
 .comp {
 	display: inline-block;
 }
+
 .button-pack {
 	display: block;
 }
+
 .adjust {
 	vertical-align: middle;
 	width: 4rem;
 	margin: 0%;
 	background-color: #30475e;
 }
+
 .finished {
 	background-color: #42b983;
 }
+
 h1 {
 	color: white;
 }
+
 h3 {
 	margin: 40px 0 0;
 }
+
 ul {
 	list-style-type: none;
 	padding: 0;
 }
+
 a {
 	color: #42b983;
 }
