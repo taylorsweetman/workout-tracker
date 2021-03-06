@@ -85,4 +85,31 @@ export default defineComponent({
 #nav a.router-link-exact-active {
 	color: #42b983;
 }
+
+.box {
+	display: inline-block;
+	margin: 1%;
+
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+	margin: 1rem;
+	border-radius: 10px;
+	padding: 1rem;
+	background-color: #f05454;
+	color: white;
+	text-align: center;
+	text-decoration: none;
+}
+
+button {
+	margin: 1%;
+
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+	margin: 1rem;
+	margin-bottom: 0%;
+	border-radius: 10px;
+	padding: 1rem;
+	background-color: #f05454;
+	color: white;
+	text-align: center;
+}
 </style>

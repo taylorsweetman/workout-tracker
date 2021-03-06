@@ -12,6 +12,7 @@
 		/>
 		<br />
 		<br />
+		<p>* minimum reps, go for as many as you can</p>
 		<button @click="finished">
 			<h1>Done!</h1>
 		</button>
@@ -125,11 +126,7 @@ export default defineComponent({
 		},
 		prepData(newRepsTuple: Array<number>): void {
 			const today = new Date().toJSON().slice(0, 10);
-			this.todayData = new Day(
-				today,
-				this.appSession.appName,
-				newRepsTuple
-			);
+			this.todayData = new Day(today, this.appSession.appName, newRepsTuple);
 		},
 		setDone(completedReps: number, setNum: number): void {
 			this.repsTuple[setNum - 1] = completedReps;
@@ -161,25 +158,12 @@ export default defineComponent({
 </script>
 
 <style scoped>
-button {
-	margin: 1%;
-
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
-	margin: 1rem;
-	margin-bottom: 0%;
-	border-radius: 10px;
-	padding: 1rem;
-	background-color: #f05454;
-	color: white;
-	text-align: center;
-}
 h1 {
 	color: black;
 }
 button h1 {
 	color: white;
 }
-
 h3 {
 	margin: 40px 0 0;
 }

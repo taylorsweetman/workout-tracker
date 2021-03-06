@@ -6,7 +6,7 @@
 			<router-link v-show="showHistory" to="/history" class="box">
 				History
 			</router-link>
-			<auth class="box" @new-user="newUser" />
+			<auth v-show="showAuth" class="box" @new-user="newUser" />
 		</div>
 		<router-view />
 	</div>
@@ -35,8 +35,13 @@ export default defineComponent({
 		showHistory(): boolean {
 			const userData = new UserData(this.store.getState().userData.days);
 			return (
-				userData.days.length !== 0 && this.currentRouteName() !== 'History'
+				userData.days.length !== 0 &&
+				this.currentRouteName() !== 'History' &&
+				this.currentRouteName() !== 'Register'
 			);
+		},
+		showAuth(): boolean {
+			return this.currentRouteName() !== 'Register';
 		},
 		titleName(): string {
 			const currentState = this.store.getState();
@@ -69,28 +74,10 @@ h1 {
 	border-radius: 10px;
 }
 
-.box {
-	display: inline-block;
-	margin: 1%;
-
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
-	margin: 1rem;
-	border-radius: 10px;
-	padding: 1rem;
-	background-color: #f05454;
-	color: white;
-	text-align: center;
-	text-decoration: none;
-}
-
 /* Style the links inside the navigation bar */
 .topnav .box {
-	color: #f2f2f2;
-	text-align: center;
 	padding: 14px 16px;
-	text-decoration: none;
 	font-size: 17px;
-	display: inline-block;
 }
 
 /* Change the color of links on hover */
@@ -98,11 +85,5 @@ h1 {
 	background-color: #ddd;
 	color: black;
 	cursor: pointer;
-}
-
-/* Add a color to the active/current link */
-.topnav .box.active {
-	background-color: #f05454;
-	color: white;
 }
 </style>
