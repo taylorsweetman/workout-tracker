@@ -78,30 +78,3 @@ export default defineComponent({
 	}
 });
 </script>
-
-<style>
-h1 {
-	color: #222831;
-}
-.box {
-	display: inline-block;
-	margin: 1%;
-
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
-	margin: 1rem;
-	border-radius: 10px;
-	padding: 1rem;
-	background-color: #f05454;
-	color: white;
-	text-align: center;
-	text-decoration: none;
-}
-#app {
-	font-family: Avenir, Helvetica, Arial, sans-serif;
-	-webkit-font-smoothing: antialiased;
-	text-align: center;
-	color: #2c3e50;
-	margin-top: 60px;
-	background-color: #e8e8e8;
-}
-</style>

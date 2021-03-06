@@ -60,18 +60,6 @@ export default defineComponent({
 .button-pack {
 	display: block;
 }
-button {
-	margin: 1%;
-
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
-	margin: 1rem;
-	margin-bottom: 0%;
-	border-radius: 10px;
-	padding: 1rem;
-	background-color: #f05454;
-	color: white;
-	text-align: center;
-}
 .adjust {
 	vertical-align: middle;
 	width: 4rem;
