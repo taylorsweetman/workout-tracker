@@ -65,7 +65,13 @@
 			/>
 			<br />
 			<button @click="validateAndWrite">Next</button>
-			<div v-if="error">{{ error }}</div>
+			<div v-if="error">
+				<br />
+				<div v-for="msg in error" :key="msg">
+					{{ msg }}.
+					<div><br /></div>
+				</div>
+			</div>
 		</div>
 		<how-to v-else />
 	</section>
@@ -75,6 +81,7 @@
 import { useStore, Day } from '../store';
 import { writeUserData } from '../services/FirebaseService';
 import { urlifyStr } from '../utils/StringUtils';
+import { prepMsg } from '../utils/EMessages';
 import HowTo from '../components/HowTo.vue';
 import { defineComponent } from 'vue';
 
@@ -132,34 +139,39 @@ export default defineComponent({
 			}
 		},
 		validate(silent: boolean): void {
-			this.error = '';
 			this.errNmTup = [0, 0, 0];
 			this.errRpTup = [0, 0, 0];
 			const namePattern = new RegExp(/^\w[\w\s]*$/);
 			const numPattern = new RegExp(/^\d+$/);
 			const nameSet = new Set<string>();
-			let errArr = new Array<string>();
+			let errSet = new Set<string>();
 
 			for (let idx in this.daysList) {
 				let nextDay = this.daysList[idx];
 				nextDay.date = idx;
 
 				if (!nextDay.exercise || !namePattern.test(nextDay.exercise)) {
-					errArr.push('BAD_NAME:' + idx);
+					let errStr = 'BAD_NAME:';
+					errStr = prepMsg(errStr);
+					errSet.add(errStr);
 					this.errNmTup[idx] = 1;
 				}
 
 				if (nameSet.has(nextDay.exercise)) {
-					errArr.push('DUP_NAME:' + idx);
+					let errStr = 'DUP_NAME:';
+					errStr = prepMsg(errStr);
+					errSet.add(errStr);
 					this.errNmTup[idx] = 1;
 				} else nameSet.add(nextDay.exercise);
 
 				if (!this.repsTuple[idx] || !numPattern.test(this.repsTuple[idx])) {
-					errArr.push('BAD_REP:' + idx);
+					let errStr = 'BAD_REP:';
+					errStr = prepMsg(errStr);
+					errSet.add(errStr);
 					this.errRpTup[idx] = 1;
 				} else nextDay.sets[0] = Number.parseInt(this.repsTuple[idx]);
 			}
-			if (errArr.length > 0 && !silent) throw errArr;
+			if (errSet.size > 0 && !silent) throw errSet;
 		},
 		write(): void {
 			let currentData = this.store.getState().userData;
